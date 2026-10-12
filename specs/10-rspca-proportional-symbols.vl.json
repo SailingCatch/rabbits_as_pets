@@ -1,59 +1,135 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "description": "Chart 10, proportional symbol map. One circle per state: its area shows how many small pets (the RSPCA's 'other animals', which include rabbits) arrived in the chosen year, and its colour shows the share that were rehomed.",
-
   "width": "container",
   "height": 440,
-
   "projection": {
     "type": "conicEqualArea",
-    "parallels": [-18, -36],
-    "rotate": [-132, 0],
-    "center": [0, -27]
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -132,
+      0
+    ],
+    "center": [
+      0,
+      -27
+    ],
+    "fit": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            112.928,
+            -25.528
+          ],
+          [
+            159.099,
+            -31.559
+          ],
+          [
+            146.863,
+            -43.632
+          ],
+          [
+            142.164,
+            -9.224
+          ]
+        ]
+      }
+    }
   },
-
   "params": [
-    {"name": "financial_year", "value": "2024-25"}
+    {
+      "name": "financial_year",
+      "value": "2024-25"
+    }
   ],
-
   "layer": [
     {
       "description": "Base map.",
       "data": {
         "url": "data/geo/australia-states.topojson",
-        "format": {"type": "topojson", "feature": "states"}
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
       },
-      "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 1.5}
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e3e8e1",
+        "stroke": "#f3f5f1",
+        "strokeWidth": 1.5
+      }
     },
     {
       "description": "One circle per state, placed at the state's label point.",
       "data": {
         "url": "data/rspca/other-animals-by-state.csv",
-        "format": {"parse": {"received": "number", "rehomed": "number"}}
+        "format": {
+          "parse": {
+            "received": "number",
+            "rehomed": "number"
+          }
+        }
       },
       "transform": [
-        {"filter": "datum.financial_year === financial_year"},
+        {
+          "filter": "datum.financial_year === financial_year"
+        },
         {
           "lookup": "state",
           "from": {
             "data": {
               "url": "data/geo/state-centroids.csv",
-              "format": {"parse": {"lon": "number", "lat": "number"}}
+              "format": {
+                "parse": {
+                  "lon": "number",
+                  "lat": "number"
+                }
+              }
             },
             "key": "state",
-            "fields": ["name", "lon", "lat"]
+            "fields": [
+              "name",
+              "lon",
+              "lat"
+            ]
           }
         },
-        {"calculate": "datum.received > 0 ? datum.rehomed / datum.received : null", "as": "share_rehomed"}
+        {
+          "calculate": "datum.received > 0 ? datum.rehomed / datum.received : null",
+          "as": "share_rehomed"
+        }
       ],
-      "mark": {"type": "circle", "opacity": 0.9, "stroke": "#f3f5f1", "strokeWidth": 2},
+      "mark": {
+        "type": "circle",
+        "opacity": 0.9,
+        "stroke": "#f3f5f1",
+        "strokeWidth": 2
+      },
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
         "size": {
           "field": "received",
           "type": "quantitative",
-          "scale": {"range": [60, 2600]},
+          "scale": {
+            "range": [
+              60,
+              2600
+            ]
+          },
           "legend": {
             "title": "Small pets received",
             "format": ",d",
@@ -64,14 +140,42 @@
         "color": {
           "field": "share_rehomed",
           "type": "quantitative",
-          "scale": {"domain": [0, 1], "range": ["#dfe5f4", "#4a64b0", "#22356b"]},
-          "legend": {"title": "Share rehomed", "format": ".0%"}
+          "scale": {
+            "domain": [
+              0,
+              1
+            ],
+            "range": [
+              "#dfe5f4",
+              "#4a64b0",
+              "#22356b"
+            ]
+          },
+          "legend": {
+            "title": "Share rehomed",
+            "format": ".0%"
+          }
         },
         "tooltip": [
-          {"field": "name", "title": "Where"},
-          {"field": "received", "title": "Received", "format": ","},
-          {"field": "rehomed", "title": "Rehomed", "format": ","},
-          {"field": "share_rehomed", "title": "Share rehomed", "format": ".0%"}
+          {
+            "field": "name",
+            "title": "Where"
+          },
+          {
+            "field": "received",
+            "title": "Received",
+            "format": ","
+          },
+          {
+            "field": "rehomed",
+            "title": "Rehomed",
+            "format": ","
+          },
+          {
+            "field": "share_rehomed",
+            "title": "Share rehomed",
+            "format": ".0%"
+          }
         ]
       }
     }

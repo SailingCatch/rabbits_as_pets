@@ -79,13 +79,15 @@ ICONS = {
         ellipse(-0.25, 0.78, 0.18, 0.08),
     ],
 
-    # Pet rabbit: rounder, with floppy "lop" ears hanging beside the head
+    # Pet rabbit: sitting and facing you, round and tidy, one ear bent over
+    # (the side-on wild rabbit above is lean, ears straight up)
     "pet_rabbit": [
-        ellipse(0.15, 0.4, 0.62, 0.48, -5),
-        circle(-0.38, -0.12, 0.32),
-        ellipse(-0.66, 0.2, 0.11, 0.34, 18),
-        circle(0.8, 0.3, 0.13),
-        ellipse(-0.3, 0.82, 0.2, 0.08),
+        ellipse(0, 0.5, 0.52, 0.46),
+        circle(0, -0.12, 0.34),
+        ellipse(-0.17, -0.68, 0.11, 0.36, -8),
+        ellipse(0.25, -0.62, 0.11, 0.32, 28),
+        ellipse(-0.28, 0.93, 0.2, 0.08),
+        ellipse(0.28, 0.93, 0.2, 0.08),
     ],
 
     # Hare: long legs, long ears, stretched out mid-run

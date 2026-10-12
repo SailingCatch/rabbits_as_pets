@@ -24,9 +24,10 @@ const CHARTS = [
   // 01 A nation of pet lovers
   {
     id: "chart-01a",
-    spec: "specs/01a-pet-boom-line.vl.json",
-    needs: ["data/ama/pets-in-australia-2025.csv"],
-    idiom: "Annotated line chart",
+    // Alternative: specs/01a-pet-boom-line.vl.json (ownership 2016-2025 line)
+    spec: "specs/01a-pets-vs-people-isotype.vl.json",
+    needs: ["data/ama/pets-in-australia-2025.csv", "data/icons.json"],
+    idiom: "Isotype count chart (pets vs people)",
   },
   {
     id: "chart-01",

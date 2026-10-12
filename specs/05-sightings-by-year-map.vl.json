@@ -1,22 +1,31 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 5, proportional-symbol map with a smooth time slider, and a bar chart of yearly totals underneath. The slider moves in steps of 0.05 of a year; in between whole years the map blends the two (at 2017.3, each circle is 70% its 2017 size and 30% its 2018 size), so dragging or pressing Play morphs the map smoothly instead of jumping between pictures. Each circle is a 1-degree square (about 100 km across) sized by its sightings, on one fixed scale so years can be compared. The marker on the bars shows where the slider is.",
-
+  "description": "Chart 5, proportional-symbol map with a smooth time slider, and a bar chart of yearly totals underneath. The slider moves in steps of 0.05 of a year; in between whole years the map blends the two (at 2017.3, each circle is 70% its 2017 size and 30% its 2018 size), so dragging or pressing Play morphs the map smoothly instead of jumping between pictures. Each circle is a 1-degree square (about 100 km across) sized by its sightings, on one fixed scale so years can be compared. The marker on the bars shows where the slider is. Every map on the page uses the same fixed frame (projection 'fit'), so the map never rescales; one 2020 sighting on Macquarie Island, far south of the frame, is clipped off.",
   "data": {
     "url": "data/ala/sightings-grid-by-year.csv",
-    "format": {"parse": {"year": "number", "lon": "number", "lat": "number", "count": "number"}}
+    "format": {
+      "parse": {
+        "year": "number",
+        "lon": "number",
+        "lat": "number",
+        "count": "number"
+      }
+    }
   },
-
   "params": [
     {
       "name": "t",
       "value": 2025,
-      "bind": {"input": "range", "min": 2010, "max": 2025, "step": 0.05, "name": "Year "}
+      "bind": {
+        "input": "range",
+        "min": 2010,
+        "max": 2025,
+        "step": 0.05,
+        "name": "Year "
+      }
     }
   ],
-
   "spacing": 4,
-
   "vconcat": [
     {
       "description": "Map for the slider's position.",
@@ -24,46 +33,137 @@
       "height": 560,
       "projection": {
         "type": "conicEqualArea",
-        "parallels": [-18, -36],
-        "rotate": [-132, 0],
-        "center": [0, -27]
+        "parallels": [
+          -18,
+          -36
+        ],
+        "rotate": [
+          -132,
+          0
+        ],
+        "center": [
+          0,
+          -27
+        ],
+        "fit": {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "MultiPoint",
+            "coordinates": [
+              [
+                112.928,
+                -25.528
+              ],
+              [
+                159.099,
+                -31.559
+              ],
+              [
+                146.863,
+                -43.632
+              ],
+              [
+                142.164,
+                -9.224
+              ]
+            ]
+          }
+        }
       },
       "layer": [
         {
           "description": "Base map: land in a quiet fill so the circles stand out.",
           "data": {
             "url": "data/geo/australia-states.topojson",
-            "format": {"type": "topojson", "feature": "states"}
+            "format": {
+              "type": "topojson",
+              "feature": "states"
+            }
           },
-          "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 1.5}
+          "mark": {
+            "type": "geoshape",
+            "fill": "#e3e8e1",
+            "stroke": "#f3f5f1",
+            "strokeWidth": 1.5
+          }
         },
         {
           "description": "Blend the two whole years either side of the slider, square by square.",
           "transform": [
-            {"filter": "datum.year === floor(t) || datum.year === floor(t) + 1"},
-            {"calculate": "datum.year === floor(t) ? 1 - (t - floor(t)) : t - floor(t)", "as": "weight"},
-            {"calculate": "datum.count * datum.weight", "as": "blended"},
-            {"aggregate": [{"op": "sum", "field": "blended", "as": "sightings"}], "groupby": ["lon", "lat"]},
-            {"filter": "datum.sightings >= 0.5"}
+            {
+              "filter": "datum.year === floor(t) || datum.year === floor(t) + 1"
+            },
+            {
+              "calculate": "datum.year === floor(t) ? 1 - (t - floor(t)) : t - floor(t)",
+              "as": "weight"
+            },
+            {
+              "calculate": "datum.count * datum.weight",
+              "as": "blended"
+            },
+            {
+              "aggregate": [
+                {
+                  "op": "sum",
+                  "field": "blended",
+                  "as": "sightings"
+                }
+              ],
+              "groupby": [
+                "lon",
+                "lat"
+              ]
+            },
+            {
+              "filter": "datum.sightings >= 0.5"
+            }
           ],
           "layer": [
             {
               "description": "Squares, sized on a fixed scale (0 to the busiest square of any year).",
-              "mark": {"type": "circle", "color": "#c0662b", "opacity": 0.7, "stroke": "#f3f5f1", "strokeWidth": 0.5},
+              "mark": {
+                "type": "circle",
+                "color": "#c0662b",
+                "opacity": 0.7,
+                "stroke": "#f3f5f1",
+                "strokeWidth": 0.5,
+                "clip": true
+              },
               "encoding": {
-                "longitude": {"field": "lon", "type": "quantitative"},
-                "latitude": {"field": "lat", "type": "quantitative"},
+                "longitude": {
+                  "field": "lon",
+                  "type": "quantitative"
+                },
+                "latitude": {
+                  "field": "lat",
+                  "type": "quantitative"
+                },
                 "size": {
                   "field": "sightings",
                   "type": "quantitative",
-                  "scale": {"domain": [0, 6100], "range": [0, 1400]},
+                  "scale": {
+                    "domain": [
+                      0,
+                      6100
+                    ],
+                    "range": [
+                      0,
+                      1400
+                    ]
+                  },
                   "legend": {
                     "title": "Sightings in a 100 km square",
                     "orient": "none",
                     "legendX": 20,
                     "legendY": 400,
                     "direction": "vertical",
-                    "values": [50, 500, 2000, 6000],
+                    "values": [
+                      50,
+                      500,
+                      2000,
+                      6000
+                    ],
                     "format": ",d",
                     "symbolFillColor": "#c0662b",
                     "symbolOpacity": 0.7,
@@ -71,36 +171,96 @@
                   }
                 },
                 "tooltip": [
-                  {"field": "sightings", "title": "Sightings", "format": ",.0f"},
-                  {"field": "lat", "title": "Latitude"},
-                  {"field": "lon", "title": "Longitude"}
+                  {
+                    "field": "sightings",
+                    "title": "Sightings",
+                    "format": ",.0f"
+                  },
+                  {
+                    "field": "lat",
+                    "title": "Latitude"
+                  },
+                  {
+                    "field": "lon",
+                    "title": "Longitude"
+                  }
                 ]
               }
             },
             {
               "description": "Big year label and running total in the top-left corner, out at sea.",
               "transform": [
-                {"aggregate": [{"op": "sum", "field": "sightings", "as": "total"}]},
-                {"calculate": "toString(round(t))", "as": "label"},
-                {"calculate": "format(datum.total, ',.0f') + ' sightings'", "as": "sublabel"},
-                {"calculate": "112", "as": "lon"},
-                {"calculate": "-12", "as": "lat"}
+                {
+                  "aggregate": [
+                    {
+                      "op": "sum",
+                      "field": "sightings",
+                      "as": "total"
+                    }
+                  ]
+                },
+                {
+                  "calculate": "toString(round(t))",
+                  "as": "label"
+                },
+                {
+                  "calculate": "format(datum.total, ',.0f') + ' sightings'",
+                  "as": "sublabel"
+                },
+                {
+                  "calculate": "112",
+                  "as": "lon"
+                },
+                {
+                  "calculate": "-12",
+                  "as": "lat"
+                }
               ],
               "layer": [
                 {
-                  "mark": {"type": "text", "align": "left", "baseline": "bottom", "fontSize": 40, "fontWeight": 700, "color": "#1e2b2a"},
+                  "mark": {
+                    "type": "text",
+                    "align": "left",
+                    "baseline": "bottom",
+                    "fontSize": 40,
+                    "fontWeight": 700,
+                    "color": "#1e2b2a"
+                  },
                   "encoding": {
-                    "longitude": {"field": "lon", "type": "quantitative"},
-                    "latitude": {"field": "lat", "type": "quantitative"},
-                    "text": {"field": "label"}
+                    "longitude": {
+                      "field": "lon",
+                      "type": "quantitative"
+                    },
+                    "latitude": {
+                      "field": "lat",
+                      "type": "quantitative"
+                    },
+                    "text": {
+                      "field": "label"
+                    }
                   }
                 },
                 {
-                  "mark": {"type": "text", "align": "left", "baseline": "top", "dy": 4, "fontSize": 14, "color": "#5b6b66"},
+                  "mark": {
+                    "type": "text",
+                    "align": "left",
+                    "baseline": "top",
+                    "dy": 4,
+                    "fontSize": 14,
+                    "color": "#5b6b66"
+                  },
                   "encoding": {
-                    "longitude": {"field": "lon", "type": "quantitative"},
-                    "latitude": {"field": "lat", "type": "quantitative"},
-                    "text": {"field": "sublabel"}
+                    "longitude": {
+                      "field": "lon",
+                      "type": "quantitative"
+                    },
+                    "latitude": {
+                      "field": "lat",
+                      "type": "quantitative"
+                    },
+                    "text": {
+                      "field": "sublabel"
+                    }
                   }
                 }
               ]
@@ -114,42 +274,145 @@
       "width": 860,
       "height": 110,
       "transform": [
-        {"aggregate": [{"op": "sum", "field": "count", "as": "total"}], "groupby": ["year"]},
-        {"calculate": "datum.year - 0.42", "as": "x0"},
-        {"calculate": "datum.year + 0.42", "as": "x1"}
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "count",
+              "as": "total"
+            }
+          ],
+          "groupby": [
+            "year"
+          ]
+        },
+        {
+          "calculate": "datum.year - 0.42",
+          "as": "x0"
+        },
+        {
+          "calculate": "datum.year + 0.42",
+          "as": "x1"
+        }
       ],
       "encoding": {
         "x": {
           "field": "x0",
           "type": "quantitative",
-          "scale": {"domain": [2009.5, 2025.5], "nice": false},
-          "axis": {"title": null, "format": "d", "values": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "grid": false, "labelFlush": false}
+          "scale": {
+            "domain": [
+              2009.5,
+              2025.5
+            ],
+            "nice": false
+          },
+          "axis": {
+            "title": null,
+            "format": "d",
+            "values": [
+              2010,
+              2011,
+              2012,
+              2013,
+              2014,
+              2015,
+              2016,
+              2017,
+              2018,
+              2019,
+              2020,
+              2021,
+              2022,
+              2023,
+              2024,
+              2025
+            ],
+            "grid": false,
+            "labelFlush": false
+          }
         }
       },
       "layer": [
         {
-          "mark": {"type": "rect", "cornerRadiusTopLeft": 2, "cornerRadiusTopRight": 2, "color": "#c0662b"},
+          "mark": {
+            "type": "rect",
+            "cornerRadiusTopLeft": 2,
+            "cornerRadiusTopRight": 2,
+            "color": "#c0662b"
+          },
           "encoding": {
-            "x2": {"field": "x1"},
-            "y": {"field": "total", "type": "quantitative", "axis": {"title": "Sightings", "format": "~s", "tickCount": 3}},
-            "opacity": {"value": 1, "condition": {"test": "abs(datum.year - t) > 0.5", "value": 0.25}},
+            "x2": {
+              "field": "x1"
+            },
+            "y": {
+              "field": "total",
+              "type": "quantitative",
+              "axis": {
+                "title": "Sightings",
+                "format": "~s",
+                "tickCount": 3
+              }
+            },
+            "opacity": {
+              "value": 1,
+              "condition": {
+                "test": "abs(datum.year - t) > 0.5",
+                "value": 0.25
+              }
+            },
             "tooltip": [
-              {"field": "year", "title": "Year"},
-              {"field": "total", "title": "Sightings", "format": ","}
+              {
+                "field": "year",
+                "title": "Year"
+              },
+              {
+                "field": "total",
+                "title": "Sightings",
+                "format": ","
+              }
             ]
           }
         },
         {
           "description": "Slider marker.",
-          "mark": {"type": "rule", "color": "#1e2b2a", "strokeWidth": 1.5},
-          "encoding": {"x": {"datum": {"expr": "t"}, "type": "quantitative"}}
+          "mark": {
+            "type": "rule",
+            "color": "#1e2b2a",
+            "strokeWidth": 1.5
+          },
+          "encoding": {
+            "x": {
+              "datum": {
+                "expr": "t"
+              },
+              "type": "quantitative"
+            }
+          }
         },
         {
           "description": "Note on the 2019 spike, so readers don't misread it as a rabbit boom.",
-          "transform": [{"filter": "datum.year === 2019"}],
-          "mark": {"type": "text", "align": "left", "baseline": "top", "dx": 22, "dy": 2, "fontSize": 12, "color": "#5b6b66", "lineBreak": "\n",
-                   "text": "2019: a surge in reports to\nthe FeralScan app, not a boom"},
-          "encoding": {"y": {"field": "total", "type": "quantitative"}}
+          "transform": [
+            {
+              "filter": "datum.year === 2019"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "top",
+            "dx": 22,
+            "dy": 2,
+            "fontSize": 12,
+            "color": "#5b6b66",
+            "lineBreak": "\n",
+            "text": "2019: a surge in reports to\nthe FeralScan app, not a boom"
+          },
+          "encoding": {
+            "y": {
+              "field": "total",
+              "type": "quantitative"
+            }
+          }
         }
       ]
     }

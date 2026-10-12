@@ -10,12 +10,14 @@ households_by_pet,Birds,9,% of households,2025,,9
 households_by_pet,Small mammals,3,% of households,2025,,9
 households_by_pet,Reptiles,3,% of households,2025,,9
 households_by_pet,Other,1,% of households,2025,,9
-pet_population,Fish,12100000,animals,2025,,14
-pet_population,Dogs,7400000,animals,2025,,12
-pet_population,Cats,5800000,animals,2025,,14
-pet_population,Birds,4400000,animals,2025,,15
-pet_population,Small mammals,770000,animals,2025,,15
-pet_population,Reptiles,512000,animals,2025,,15
+pet_population,Fish,12138900,animals,2025,,10
+pet_population,Dogs,7367300,animals,2025,,10
+pet_population,Cats,5834700,animals,2025,,10
+pet_population,Birds,4447900,animals,2025,,10
+pet_population,Small mammals,769500,animals,2025,,10
+pet_population,Reptiles,511900,animals,2025,,10
+pet_population,Other,571800,animals,2025,,10
+people,People in Australia,27300000,people,2025,"As given in the report, which compares it with 31.6 million pets.",9
 small_mammal_type,Rabbits,51,% of small-mammal-owning households,2025,"Households can own more than one type, so these add to more than 100%.",15
 small_mammal_type,Guinea pigs,43,% of small-mammal-owning households,2025,,15
 small_mammal_type,Ferrets,18,% of small-mammal-owning households,2025,,15

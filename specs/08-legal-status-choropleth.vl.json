@@ -1,31 +1,71 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
   "description": "Chart 8, categorical choropleth. Each state and territory is coloured by whether pet rabbits are allowed, with the rule and its government source in the tooltip.",
-
   "width": "container",
   "height": 440,
-
   "projection": {
     "type": "conicEqualArea",
-    "parallels": [-18, -36],
-    "rotate": [-132, 0],
-    "center": [0, -27]
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -132,
+      0
+    ],
+    "center": [
+      0,
+      -27
+    ],
+    "fit": {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "type": "MultiPoint",
+        "coordinates": [
+          [
+            112.928,
+            -25.528
+          ],
+          [
+            159.099,
+            -31.559
+          ],
+          [
+            146.863,
+            -43.632
+          ],
+          [
+            142.164,
+            -9.224
+          ]
+        ]
+      }
+    }
   },
-
   "layer": [
     {
       "description": "States, joined to the legal-status table on the state code.",
       "data": {
         "url": "data/geo/australia-states.topojson",
-        "format": {"type": "topojson", "feature": "states"}
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
       },
       "transform": [
         {
           "lookup": "properties.state",
           "from": {
-            "data": {"url": "data/legal/rabbit-legal-status.csv"},
+            "data": {
+              "url": "data/legal/rabbit-legal-status.csv"
+            },
             "key": "state",
-            "fields": ["status", "rule", "source_url"]
+            "fields": [
+              "status",
+              "rule",
+              "source_url"
+            ]
           }
         },
         {
@@ -33,22 +73,48 @@
           "as": "source"
         }
       ],
-      "mark": {"type": "geoshape", "stroke": "#f3f5f1", "strokeWidth": 1.5},
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#f3f5f1",
+        "strokeWidth": 1.5
+      },
       "encoding": {
         "color": {
           "field": "status",
           "type": "nominal",
           "scale": {
-            "domain": ["Allowed", "Allowed with extra rules", "Banned"],
-            "range": ["#4a64b0", "#97a8d8", "#c0662b"]
+            "domain": [
+              "Allowed",
+              "Allowed with extra rules",
+              "Banned"
+            ],
+            "range": [
+              "#4a64b0",
+              "#97a8d8",
+              "#c0662b"
+            ]
           },
-          "legend": {"title": null}
+          "legend": {
+            "title": null
+          }
         },
         "tooltip": [
-          {"field": "properties.name", "title": "Where"},
-          {"field": "status", "title": "Pet rabbits"},
-          {"field": "rule", "title": "Rule"},
-          {"field": "source", "title": "Source"}
+          {
+            "field": "properties.name",
+            "title": "Where"
+          },
+          {
+            "field": "status",
+            "title": "Pet rabbits"
+          },
+          {
+            "field": "rule",
+            "title": "Rule"
+          },
+          {
+            "field": "source",
+            "title": "Source"
+          }
         ]
       }
     },
@@ -56,18 +122,41 @@
       "description": "State codes as direct labels, so the map reads without the legend. The ACT is too small to hold its label, so it sits out to sea in dark text.",
       "data": {
         "url": "data/geo/state-centroids.csv",
-        "format": {"parse": {"lon": "number", "lat": "number"}}
+        "format": {
+          "parse": {
+            "lon": "number",
+            "lat": "number"
+          }
+        }
       },
       "transform": [
-        {"calculate": "datum.state === 'ACT' ? datum.lon + 2.8 : datum.lon", "as": "label_lon"}
+        {
+          "calculate": "datum.state === 'ACT' ? datum.lon + 2.8 : datum.lon",
+          "as": "label_lon"
+        }
       ],
-      "mark": {"type": "text", "fontSize": 13, "fontWeight": 600},
+      "mark": {
+        "type": "text",
+        "fontSize": 13,
+        "fontWeight": 600
+      },
       "encoding": {
-        "longitude": {"field": "label_lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
-        "text": {"field": "state"},
+        "longitude": {
+          "field": "label_lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "state"
+        },
         "color": {
-          "condition": {"test": "datum.state === 'ACT'", "value": "#1e2b2a"},
+          "condition": {
+            "test": "datum.state === 'ACT'",
+            "value": "#1e2b2a"
+          },
           "value": "#ffffff"
         }
       }

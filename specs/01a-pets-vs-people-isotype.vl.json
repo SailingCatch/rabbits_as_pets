@@ -1,0 +1,262 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 1a, Isotype count chart. One icon is about one million: the top row is Australia's 27.3 million people, the bottom row its 31.6 million pets, drawn as the animals themselves. Icons are rounded to whole millions the Isotype way: each group gets the icons from its rounded start to its rounded end along the row, so the row length matches the total. Reptiles and other pets are merged into 'Other' because each alone rounds to no icon. Small mammals (which include rabbits) are highlighted.",
+  "data": {
+    "url": "data/ama/pets-in-australia-2025.csv"
+  },
+  "transform": [
+    {
+      "filter": "datum.breakdown === 'pet_population' || datum.breakdown === 'people'"
+    },
+    {
+      "calculate": "toNumber(datum.value) / 1000000",
+      "as": "millions"
+    },
+    {
+      "calculate": "datum.category === 'Reptiles' || datum.category === 'Other' ? 'Other' : datum.category",
+      "as": "group"
+    },
+    {
+      "calculate": "datum.breakdown === 'people' ? 'people' : 'pets'",
+      "as": "row_key"
+    },
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "millions",
+          "as": "millions"
+        }
+      ],
+      "groupby": [
+        "row_key",
+        "group"
+      ]
+    },
+    {
+      "calculate": "indexof(['People in Australia', 'Fish', 'Dogs', 'Cats', 'Birds', 'Other', 'Small mammals'], datum.group)",
+      "as": "order"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "millions",
+          "as": "row_total"
+        }
+      ],
+      "groupby": [
+        "row_key"
+      ]
+    },
+    {
+      "window": [
+        {
+          "op": "sum",
+          "field": "millions",
+          "as": "running"
+        }
+      ],
+      "groupby": [
+        "row_key"
+      ],
+      "sort": [
+        {
+          "field": "order"
+        }
+      ],
+      "frame": [
+        null,
+        0
+      ]
+    },
+    {
+      "calculate": "datum.running - datum.millions",
+      "as": "start"
+    },
+    {
+      "calculate": "datum.row_key === 'people' ? format(datum.row_total, '.1f') + ' million people' : format(datum.row_total, '.1f') + ' million pets'",
+      "as": "row"
+    },
+    {
+      "calculate": "{'People in Australia': 'person', 'Fish': 'fish', 'Dogs': 'dog', 'Cats': 'cat', 'Birds': 'bird', 'Other': 'reptile', 'Small mammals': 'small_mammal'}[datum.group]",
+      "as": "icon"
+    },
+    {
+      "calculate": "{'Fish': 'Fish', 'Dogs': 'Dogs', 'Cats': 'Cats', 'Birds': 'Birds', 'Other': 'Reptiles and other', 'Small mammals': 'Small mammals, incl. rabbits', 'People in Australia': 'People'}[datum.group] + ': ' + format(datum.millions, '.1f') + ' million'",
+      "as": "tip"
+    },
+    {
+      "calculate": "sequence(round(datum.start), round(datum.running))",
+      "as": "slot"
+    },
+    {
+      "calculate": "length(datum.slot) > 0 ? datum.slot[0] : -1",
+      "as": "first_slot"
+    },
+    {
+      "flatten": [
+        "slot"
+      ]
+    },
+    {
+      "filter": "datum.slot >= 0"
+    },
+    {
+      "lookup": "icon",
+      "from": {
+        "data": {
+          "url": "data/icons.json"
+        },
+        "key": "name",
+        "fields": [
+          "path"
+        ]
+      }
+    }
+  ],
+  "width": 930,
+  "height": {
+    "step": 86
+  },
+  "encoding": {
+    "x": {
+      "field": "slot",
+      "type": "quantitative",
+      "axis": null,
+      "scale": {
+        "domain": [
+          -0.6,
+          32.6
+        ],
+        "nice": false,
+        "zero": false
+      }
+    },
+    "y": {
+      "field": "row",
+      "type": "nominal",
+      "sort": {
+        "field": "order",
+        "op": "min",
+        "order": "ascending"
+      },
+      "axis": {
+        "title": null,
+        "labelFontSize": 15,
+        "labelFontWeight": 700,
+        "labelColor": "#1e2b2a",
+        "labelLimit": 0,
+        "labelPadding": 14
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 620,
+        "opacity": 1,
+        "strokeWidth": 0
+      },
+      "encoding": {
+        "shape": {
+          "field": "path",
+          "type": "nominal",
+          "scale": null
+        },
+        "color": {
+          "condition": [
+            {
+              "test": "datum.row_key === 'people'",
+              "value": "#8a968f"
+            },
+            {
+              "test": "datum.group === 'Small mammals'",
+              "value": "#4a64b0"
+            }
+          ],
+          "value": "#9aa9c9"
+        },
+        "tooltip": [
+          {
+            "field": "tip",
+            "title": "One icon ≈ 1 million"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Group names above the first icon of each larger group of pets.",
+      "transform": [
+        {
+          "filter": "datum.row_key === 'pets' && datum.slot === datum.first_slot && datum.millions >= 3"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "bottom",
+        "dx": -12,
+        "dy": -24,
+        "fontSize": 12,
+        "fontWeight": 600,
+        "color": "#5b6b66"
+      },
+      "encoding": {
+        "text": {
+          "field": "group"
+        }
+      }
+    },
+    {
+      "description": "Label under the small-mammal icon, which includes rabbits.",
+      "transform": [
+        {
+          "filter": "datum.group === 'Small mammals'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "baseline": "top",
+        "dx": 12,
+        "dy": 24,
+        "fontSize": 12,
+        "fontWeight": 700,
+        "color": "#4a64b0",
+        "text": "Small mammals, incl. rabbits"
+      }
+    },
+    {
+      "description": "The gap, written where the people row ends: how many more pets there are than people.",
+      "transform": [
+        {
+          "filter": "datum.row_key === 'people' && datum.slot === 0"
+        },
+        {
+          "calculate": "'+' + format(31.6 - 27.3, '.1f') + ' million more pets than people'",
+          "as": "gap_label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "color": "#4a64b0",
+        "dx": -10
+      },
+      "encoding": {
+        "x": {
+          "datum": 27,
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "gap_label"
+        }
+      }
+    }
+  ]
+}
