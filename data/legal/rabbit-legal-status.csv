@@ -1,9 +1,9 @@
 state,name,status,rule,source_url,verified
 NSW,New South Wales,Allowed,Domestic rabbits can be kept as pets; keeping wild rabbits is not allowed.,,no
-VIC,Victoria,Allowed,Domestic rabbits can be kept as pets.,,no
+VIC,Victoria,Allowed,Domestic rabbits can be kept as pets; wild rabbits are a declared pest.,https://agriculture.vic.gov.au/pets/other-pets/rabbits/guidelines-on-keeping-pet-rabbits,no
 QLD,Queensland,Banned,"Keeping, selling or bringing a rabbit into Queensland is illegal under the Biosecurity Act 2014. Maximum penalty: 500 penalty units.",https://www.business.qld.gov.au/industries/farms-fishing-forestry/agriculture/biosecurity/animals/invasive/restricted/rabbit,yes
-SA,South Australia,Allowed,Domestic rabbits can be kept as pets.,,no
-WA,Western Australia,Allowed,Domestic rabbits can be kept as pets.,,no
-TAS,Tasmania,Allowed,Domestic rabbits can be kept as pets.,,no
+SA,South Australia,Allowed with extra rules,"By law, pet rabbits must live in an escape-proof cage or pen, must not roam the property and must never be released.",https://cdn.environment.sa.gov.au/landscape/docs/Keeping-pet-rabbits-feb-2022.pdf,yes
+WA,Western Australia,Allowed,"Domestic breeds can be kept without a permit, but brown, wild-type rabbits can't be kept or brought into the state.",https://www.dpird.wa.gov.au/individuals/what-can-i-bring-into-wa/importing-animals-to-WA/,yes
+TAS,Tasmania,Allowed,"Pet rabbits can be kept on mainland Tasmania and Bruny Island, but taking one to any other Tasmanian island is banned.",https://nre.tas.gov.au/invasive-species/invasive-animals/invasive-mammals/european-rabbits/rabbit-biology,yes
 NT,Northern Territory,Allowed,Domestic rabbits are listed among animals that do not need a permit.,https://nt.gov.au/environment/animals/wildlife-permits/animals-that-do-not-need-a-permit,yes
-ACT,Australian Capital Territory,Allowed with a code of practice,Pet rabbits can be kept but owners must follow a mandatory code of practice.,,no
+ACT,Australian Capital Territory,Allowed with extra rules,"Owners must follow a mandatory code of practice (2024) covering housing, food, health and care.",https://www.legislation.act.gov.au/DownloadFile/di/2024-231/current/PDF/2024-231.PDF,yes

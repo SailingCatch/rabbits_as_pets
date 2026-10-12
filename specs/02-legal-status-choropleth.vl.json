@@ -39,7 +39,7 @@
           "field": "status",
           "type": "nominal",
           "scale": {
-            "domain": ["Allowed", "Allowed with a code of practice", "Banned"],
+            "domain": ["Allowed", "Allowed with extra rules", "Banned"],
             "range": ["#4a64b0", "#97a8d8", "#c0662b"]
           },
           "legend": {"title": null}

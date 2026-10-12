@@ -1,34 +1,40 @@
 """
-Turn an Atlas of Living Australia (ALA) rabbit download into three small
+Turn the Atlas of Living Australia (ALA) rabbit download into four small
 files the charts can load quickly.
 
-The raw ALA download has one row per sighting and dozens of columns
-(tens of MB). The page only needs a few columns, and two of the charts only
-need counts, so this script writes:
+The raw download has one row per record and 192 columns (about 140 MB
+unzipped). The charts only need counts, so this script writes:
 
-    data/ala/sightings-points.csv        one row per sighting, recent years only
-                                         columns: lat, lon, year, month, state
+    data/ala/sightings-points.csv        records per ~1 km spot, recent years
+                                         columns: year, state, lat, lon, count
                                          -> chart 1 (dot map)
 
-    data/ala/sightings-grid-by-year.csv  sightings counted in 1° x 1° squares
+    data/ala/sightings-grid-by-year.csv  records per 1° square (~100 km)
                                          columns: year, lon, lat, count
                                          -> chart 3 (small-multiple maps)
 
-    data/ala/sightings-by-month.csv      sightings counted per month
+    data/ala/sightings-by-month.csv      records per month
                                          columns: year, month, count
                                          -> chart 4 (heatmap)
 
-Nothing is invented or altered: rows without coordinates or a date are
-skipped, every other row is kept and only counted or trimmed.
+    data/ala/sightings-by-state-year.csv records per state per year
+                                         columns: year, state, count
+                                         -> chart 5 (sightings per 1,000 km²)
+
+    data/ala/source.json                 DOI, citation and download date,
+                                         for the "About the data" section
+
+Nothing is invented or altered: every record is counted where it can be.
+A record with no coordinates still counts towards its state's total, and
+one with no month still appears on the maps.
 
 Usage (from the project folder):
-    python3 scripts/prepare_ala.py data/raw/ala-rabbit-records.csv
-
-The input can be the CSV inside the ALA zip, or the zip itself.
+    python3 scripts/prepare_ala.py data/raw/ala/records-2026-10-12.zip
 """
 
 import csv
 import io
+import json
 import sys
 import zipfile
 from collections import Counter
@@ -38,21 +44,10 @@ from pathlib import Path
 
 POINT_YEARS = {2024, 2025}          # years drawn as individual dots (chart 1)
 GRID_YEARS = range(2019, 2026)      # years shown as small multiples (chart 3)
-MONTH_YEARS = range(2010, 2026)     # years in the heatmap (chart 4)
-GRID_SIZE = 1.0                     # grid square size in degrees (~100 km)
+COUNT_YEARS = range(2010, 2026)     # years in the heatmap and state chart (charts 4, 5)
 COORD_DECIMALS = 2                  # 2 decimals ≈ 1 km, plenty for a national map
 
 OUTPUT_DIR = Path("data/ala")
-
-# ALA has used slightly different column names over the years.
-# For each value we need, these are the names we accept, in order.
-COLUMN_NAMES = {
-    "lat":   ["decimalLatitude", "Latitude - original", "latitude"],
-    "lon":   ["decimalLongitude", "Longitude - original", "longitude"],
-    "year":  ["year", "Year"],
-    "month": ["month", "Month"],
-    "state": ["stateProvince", "State/Territory", "cl22", "state"],
-}
 
 STATE_ABBREVIATIONS = {
     "New South Wales": "NSW",
@@ -68,104 +63,90 @@ STATE_ABBREVIATIONS = {
 
 # ---- Reading -------------------------------------------------------------
 
-def open_rows(path):
-    """Yield each record as a dict, from a .csv file or a .zip containing one."""
-    path = Path(path)
-    if path.suffix == ".zip":
-        with zipfile.ZipFile(path) as archive:
-            csv_names = [n for n in archive.namelist() if n.endswith(".csv")]
-            # ALA zips also hold citation/licence CSVs; the records file is the largest
-            records_file = max(csv_names, key=lambda n: archive.getinfo(n).file_size)
-            with archive.open(records_file) as raw:
-                yield from csv.DictReader(io.TextIOWrapper(raw, encoding="utf-8"))
-    else:
-        with open(path, newline="", encoding="utf-8") as file:
-            yield from csv.DictReader(file)
+def read_zip(path):
+    """Return (records, doi) from the ALA zip. The records file is the
+    largest CSV; the zip also holds citation and heading CSVs and doi.txt."""
+    archive = zipfile.ZipFile(path)
+    names = archive.namelist()
+    records_file = max((n for n in names if n.endswith(".csv")),
+                       key=lambda n: archive.getinfo(n).file_size)
+    doi = archive.read("doi.txt").decode().strip() if "doi.txt" in names else None
+    raw = archive.open(records_file)
+    return csv.DictReader(io.TextIOWrapper(raw, encoding="utf-8")), doi
 
 
-def find_columns(header):
-    """Map our short names (lat, lon, ...) to the actual column names in this file."""
-    found = {}
-    for short_name, candidates in COLUMN_NAMES.items():
-        match = next((name for name in candidates if name in header), None)
-        if match is None:
-            sys.exit(f"Could not find a '{short_name}' column. Columns in file: {header}")
-        found[short_name] = match
-    return found
-
-
-def clean_record(row, columns):
-    """Return (lat, lon, year, month, state) or None if the row can't be used."""
+def number(text, kind=float):
     try:
-        lat = round(float(row[columns["lat"]]), COORD_DECIMALS)
-        lon = round(float(row[columns["lon"]]), COORD_DECIMALS)
-        year = int(float(row[columns["year"]]))
-        month = int(float(row[columns["month"]]))
-    except (ValueError, TypeError):
-        return None                     # missing or non-numeric value
-    if not 1 <= month <= 12:
+        return kind(float(text))
+    except (TypeError, ValueError):
         return None
-    state_name = row[columns["state"]].strip()
-    state = STATE_ABBREVIATIONS.get(state_name, state_name)
-    return lat, lon, year, month, state
-
-
-# ---- Grid helper -----------------------------------------------------------
-
-def grid_centre(value):
-    """Snap a coordinate to the centre of its grid square, e.g. 144.96 -> 144.5."""
-    return (value // GRID_SIZE) * GRID_SIZE + GRID_SIZE / 2
 
 
 # ---- Writing ---------------------------------------------------------------
 
-def write_csv(path, header, rows):
+def write_csv(path, header, counts):
+    rows = [(*key, n) for key, n in sorted(counts.items())]
     with open(path, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(header)
         writer.writerows(rows)
     size_kb = path.stat().st_size / 1024
-    print(f"  {path}  ({len(rows):,} rows, {size_kb:,.0f} KB)")
+    print(f"  {path}  ({len(rows):,} rows, {sum(counts.values()):,} records, {size_kb:,.0f} KB)")
 
 
 def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
+    zip_path = Path(sys.argv[1])
+    records, doi = read_zip(zip_path)
 
-    rows = open_rows(sys.argv[1])
-    first = next(rows)
-    columns = find_columns(list(first.keys()))
+    points, grid, months, states = Counter(), Counter(), Counter(), Counter()
+    total = no_coords = no_month = 0
 
-    points = []
-    grid_counts = Counter()
-    month_counts = Counter()
-    skipped = 0
-
-    for row in [first, *rows]:
-        record = clean_record(row, columns)
-        if record is None:
-            skipped += 1
+    for row in records:
+        total += 1
+        year = number(row["year"], int)
+        month = number(row["month"], int)
+        lat = number(row["decimalLatitude"])
+        lon = number(row["decimalLongitude"])
+        state = STATE_ABBREVIATIONS.get(row["stateProvince"], "")
+        if year not in COUNT_YEARS:
             continue
-        lat, lon, year, month, state = record
 
+        if state:
+            states[(year, state)] += 1
+        if month in range(1, 13):
+            months[(year, month)] += 1
+        else:
+            no_month += 1
+        if lat is None or lon is None:
+            no_coords += 1
+            continue
         if year in POINT_YEARS:
-            points.append((lat, lon, year, month, state))
+            points[(year, state, round(lat, COORD_DECIMALS), round(lon, COORD_DECIMALS))] += 1
         if year in GRID_YEARS:
-            grid_counts[(year, grid_centre(lon), grid_centre(lat))] += 1
-        if year in MONTH_YEARS:
-            month_counts[(year, month)] += 1
+            # Snap to the nearest whole degree: the centre of a 1° square
+            grid[(year, float(round(lon)), float(round(lat)))] += 1
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    print("Wrote:")
-    write_csv(OUTPUT_DIR / "sightings-points.csv",
-              ["lat", "lon", "year", "month", "state"], points)
-    write_csv(OUTPUT_DIR / "sightings-grid-by-year.csv",
-              ["year", "lon", "lat", "count"],
-              [(y, x, la, n) for (y, x, la), n in sorted(grid_counts.items())])
-    write_csv(OUTPUT_DIR / "sightings-by-month.csv",
-              ["year", "month", "count"],
-              [(y, m, n) for (y, m), n in sorted(month_counts.items())])
-    print(f"Skipped {skipped:,} rows without usable coordinates or date.")
+    print(f"Read {total:,} records from {zip_path.name}. Wrote:")
+    write_csv(OUTPUT_DIR / "sightings-points.csv", ["year", "state", "lat", "lon", "count"], points)
+    write_csv(OUTPUT_DIR / "sightings-grid-by-year.csv", ["year", "lon", "lat", "count"], grid)
+    write_csv(OUTPUT_DIR / "sightings-by-month.csv", ["year", "month", "count"], months)
+    write_csv(OUTPUT_DIR / "sightings-by-state-year.csv", ["year", "state", "count"], states)
+    print(f"{no_coords:,} records have no coordinates (left off the maps); "
+          f"{no_month:,} have no month (left out of the heatmap).")
+
+    source = {
+        "source": "Atlas of Living Australia occurrence download",
+        "species": "Oryctolagus cuniculus (European rabbit)",
+        "filters": "Years 2010-2025, Australia, ALA default data quality profile",
+        "doi": doi,
+        "downloaded": zip_path.stem.removeprefix("records-"),
+        "records": total,
+    }
+    (OUTPUT_DIR / "source.json").write_text(json.dumps(source, indent=2) + "\n")
+    print(f"  {OUTPUT_DIR / 'source.json'}")
 
 
 if __name__ == "__main__":

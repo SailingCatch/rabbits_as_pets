@@ -5,10 +5,12 @@
 #
 #   data/geo/australia-states.topojson   simplified outlines, about 100 KB
 #                                        one object called "states", each
-#                                        shape has properties: name, state
+#                                        shape has properties: name, state,
+#                                        area_km2
 #   data/geo/state-centroids.csv         one point inside each state, for
-#                                        labels and proportional circles
-#                                        columns: state, name, lon, lat
+#                                        labels and proportional circles,
+#                                        plus the state's land area
+#                                        columns: state, name, area_km2, lon, lat
 #
 # "state" is the short code (NSW, VIC, ...) used by every other data file,
 # so all the maps join their data on that one column.
@@ -39,7 +41,7 @@ CODES="({
 })"
 
 # Step by step:
-#   -each           add the short code and a plain "name" field
+#   -each           add the short code, a plain "name" and the ABS area
 #   -filter         keep the eight states and territories
 #   -filter-fields  drop every other ABS column (keeps the file small)
 #   -simplify       remove 99% of the outline detail (invisible at page size);
@@ -50,9 +52,9 @@ CODES="({
 #   -each           store that point's coordinates as lon / lat columns
 #   -o              write the centroids as CSV
 npx --yes mapshaper@0.7 "$INPUT" \
-  -each "name = STE_NAME21, state = ${CODES}[STE_NAME21]" \
+  -each "name = STE_NAME21, state = ${CODES}[STE_NAME21], area_km2 = Math.round(AREASQKM21)" \
   -filter "state !== undefined" \
-  -filter-fields state,name \
+  -filter-fields state,name,area_km2 \
   -simplify 1% keep-shapes \
   -rename-layers states \
   -o "$OUT_DIR/australia-states.topojson" format=topojson quantization=100000 \

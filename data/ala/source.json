@@ -1,0 +1,8 @@
+{
+  "source": "Atlas of Living Australia occurrence download",
+  "species": "Oryctolagus cuniculus (European rabbit)",
+  "filters": "Years 2010-2025, Australia, ALA default data quality profile",
+  "doi": "https://doi.org/10.26197/ala.d8ea8887-feb6-468f-8fd6-2cf0ff66193f",
+  "downloaded": "2026-10-12",
+  "records": 118526
+}
