@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 6, proportional symbol map. One circle per state: its area shows how many small pets (the RSPCA's 'other animals', which include rabbits) arrived in the chosen year, and its colour shows the share that were rehomed.",
+  "description": "Chart 10, proportional symbol map. One circle per state: its area shows how many small pets (the RSPCA's 'other animals', which include rabbits) arrived in the chosen year, and its colour shows the share that were rehomed.",
 
   "width": "container",
   "height": 440,

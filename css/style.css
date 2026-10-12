@@ -12,10 +12,20 @@
 
 /* 1. Design tokens ---------------------------------------------------------
    Change a colour or size here and it changes across the whole page.
-   The two "story" colours are also used inside the charts (see THEME in
-   js/main.js) so text and charts always agree:
+   The colours are also used inside the charts (see COLOURS in js/main.js)
+   so text and charts always agree.
+
+   Story colours (every chart uses these two the same way):
      --pet   muted blue   rabbits as pets / at home
-     --pest  ochre        rabbits in the wild                                */
+     --pest  ochre        rabbits in the wild
+
+   Categorical palette, used in this fixed order for charts with more
+   categories. Checked with a colour-vision validator: every colour stands
+   out from the page, and neighbours stay distinct for colour-blind readers
+   (ochre next to green is the closest pair, so those charts also use gaps
+   and labels):
+     --pet, --pest, --gum (green), --wattle (gold), --plum, --olive
+   Plus --neutral for "unknown" or context marks.                            */
 :root {
   color-scheme: light;
 
@@ -27,6 +37,11 @@
 
   --pet: #4a64b0;
   --pest: #c0662b;
+  --gum: #00806a;
+  --wattle: #b3820f;
+  --plum: #a3478f;
+  --olive: #6b8e23;
+  --neutral: #a3aea8;
 
   --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-body: "Literata", Georgia, serif;
@@ -38,8 +53,8 @@
   --size-h2: 2rem;         /* 32px section headings */
   --size-h1: clamp(2.5rem, 6vw, 4.25rem);
 
-  --measure: 38rem;        /* reading column: about 65–70 characters a line */
-  --wide: 60rem;           /* chart column */
+  --measure: 40rem;        /* reading column: about 65–70 characters a line */
+  --wide: 72rem;           /* chart column: fills a laptop screen */
   --gutter: 1.25rem;       /* side padding on small screens */
 }
 
@@ -89,11 +104,66 @@ section > .wide {
 }
 
 section {
-  padding-block: 4rem 2rem;
+  padding-block: 5rem 3rem;
+  scroll-margin-top: 3rem; /* so the sticky contents bar doesn't cover headings */
+}
+
+/* Section number above each heading, e.g. "02 · History" */
+.kicker {
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pest);
+  margin-bottom: 0.5rem;
 }
 
 section + section {
   border-top: 1px solid var(--rule);
+}
+
+/* Text beside a chart: the words sit next to the map they explain, so a
+   tall map of Australia doesn't leave empty space either side. Stacks on
+   narrow screens.                                                          */
+section > .split {
+  width: min(100% - 2 * var(--gutter), var(--wide));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem 3.5rem;
+  align-items: start;
+  margin-block: 2.5rem 1.5rem;
+}
+
+@media (min-width: 64rem) {
+  section > .split {
+    grid-template-columns: minmax(16rem, 1fr) minmax(0, 2fr);
+  }
+
+  section > .split--flip {
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+  }
+
+  .split--flip > .split__text {
+    order: 2;              /* text on the right, for variety down the page */
+  }
+
+  .split__text {
+    position: sticky;
+    top: 4rem;             /* stays in view while a tall chart scrolls by */
+  }
+}
+
+.split .chart {
+  margin: 0;
+}
+
+.split__text h3 {
+  margin-top: 0.25rem;
+}
+
+.split__text p {
+  font-size: 1rem;
 }
 
 /* Two charts side by side on wide screens, stacked on narrow ones */
@@ -159,11 +229,83 @@ p {
 
 .key--pet::before  { background: var(--pet); }
 .key--pest::before { background: var(--pest); }
+.key--neutral::before { background: var(--neutral); }
 
 
 /* Hero ---------------------------------------------------------------------- */
 .hero {
-  padding-block: 5rem 1rem;
+  padding-block: 6rem 3rem;
+  background: var(--paper-deep);
+}
+
+.hero .column {
+  width: min(100% - 2 * var(--gutter), var(--wide));
+}
+
+.hero .lede {
+  max-width: var(--measure);
+}
+
+/* Three headline numbers under the lede */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1.5rem 3rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stat__number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat__number--pet  { color: var(--pet); }
+.stat__number--pest { color: var(--pest); }
+
+.stat__label {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+  color: var(--ink-muted);
+  max-width: 24ch;
+}
+
+/* Contents bar: sticks to the top so readers always know where they are */
+.toc {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.toc ol {
+  display: flex;
+  gap: 0.25rem 1.5rem;
+  flex-wrap: wrap;
+  width: min(100% - 2 * var(--gutter), var(--wide));
+  margin: 0 auto;
+  padding: 0.6rem 0;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+}
+
+.toc a {
+  color: var(--ink-muted);
+  text-decoration: none;
+}
+
+.toc a:hover {
+  color: var(--ink);
 }
 
 .hero h1 {
@@ -171,6 +313,7 @@ p {
 }
 
 .byline {
+  margin-top: 2.5rem;
   font-family: var(--font-display);
   font-size: var(--size-small);
   color: var(--ink-muted);

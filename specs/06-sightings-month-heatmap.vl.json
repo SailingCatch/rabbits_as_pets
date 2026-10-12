@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 4, heatmap. Rows are years, columns are months, and each cell's colour shows how many wild rabbit sightings were reported that month.",
+  "description": "Chart 6, heatmap. Rows are years, columns are months, and each cell's colour shows how many wild rabbit sightings were reported that month. Across all years, autumn (March to May) has the most sightings, though the busiest month changes from year to year.",
 
   "data": {
     "url": "data/ala/sightings-by-month.csv",

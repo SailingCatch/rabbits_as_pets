@@ -8,6 +8,11 @@
 
    THEME is a Vega-Lite "config" object passed to every chart, so fonts,
    colours and axis styling are set once here instead of in every spec.
+
+   Charts marked fitWidth in js/charts.js are stacked views (vconcat), which
+   Vega-Lite can't size to their box by itself. For those, the spec is
+   loaded first and each view's width is set to the box's width (heights
+   scale with it), so they fill the column on any screen.
    ========================================================================== */
 
 
@@ -21,9 +26,19 @@ const COLOURS = {
   land: "#e3e8e1",
   pet: "#4a64b0",
   pest: "#c0662b",
+  gum: "#00806a",
+  wattle: "#b3820f",
+  plum: "#a3478f",
+  olive: "#6b8e23",
+  neutral: "#a3aea8",
   // Ochre ramp for "how many" (light = few, dark = many)
   ochreRamp: ["#f6e7c8", "#e9c27f", "#d3913f", "#a9611f", "#6e3a12"],
 };
+
+// Categorical order: always assigned in this order, never cycled
+const CATEGORICAL = [
+  COLOURS.pet, COLOURS.pest, COLOURS.gum, COLOURS.wattle, COLOURS.plum, COLOURS.olive,
+];
 
 const FONT = "Bricolage Grotesque";
 
@@ -65,7 +80,7 @@ const THEME = {
   text: { font: FONT, color: COLOURS.ink },
 
   range: {
-    category: [COLOURS.pet, COLOURS.pest],
+    category: CATEGORICAL,
     ramp: COLOURS.ochreRamp,       // default for quantitative colour
     heatmap: COLOURS.ochreRamp,
   },
@@ -88,6 +103,23 @@ async function fileHasData(path) {
   } catch (error) {
     return false;
   }
+}
+
+// For stacked charts: set every view's width to the box width, and scale
+// fixed heights by the same amount so maps keep their shape.
+async function fitToWidth(specPath, container) {
+  const spec = await (await fetch(specPath)).json();
+  const width = Math.floor(container.clientWidth) - 8;   // minus padding
+  for (const view of spec.vconcat || []) {
+    if (typeof view.width !== "number") continue;
+    const scale = width / view.width;
+    view.width = width;
+    if (view.projection && typeof view.height === "number") {
+      // Keep maps a sensible height on very wide screens
+      view.height = Math.min(Math.round(view.height * scale), 620);
+    }
+  }
+  return spec;
 }
 
 // Replace the chart's <div> contents with a short dashed-border note.
@@ -123,7 +155,8 @@ async function drawChart(chart) {
   }
 
   try {
-    await vegaEmbed(container, chart.spec, {
+    const spec = chart.fitWidth ? await fitToWidth(chart.spec, container) : chart.spec;
+    await vegaEmbed(container, spec, {
       config: THEME,
       actions: false,                       // hide the "..." export menu
       renderer: chart.renderer || "svg",    // canvas is faster for many points

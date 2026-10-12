@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 2, categorical choropleth. Each state and territory is coloured by whether pet rabbits are allowed, with the rule and its government source in the tooltip.",
+  "description": "Chart 8, categorical choropleth. Each state and territory is coloured by whether pet rabbits are allowed, with the rule and its government source in the tooltip.",
 
   "width": "container",
   "height": 440,

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 5, linked year picker and map. The bars show wild rabbit sightings reported each year; clicking a bar redraws the map below for that year. Each circle is a 1-degree square (about 100 km across) sized by its sightings, on one fixed scale so years can be compared.",
+
+  "data": {
+    "url": "data/ala/sightings-grid-by-year.csv",
+    "format": {"parse": {"year": "number", "lon": "number", "lat": "number", "count": "number"}}
+  },
+
+  "spacing": 8,
+
+  "vconcat": [
+    {
+      "description": "Year picker: one bar per year. The picked year is drawn in the pest colour, the rest are faded.",
+      "width": 860,
+      "height": 110,
+      "params": [
+        {
+          "name": "picked",
+          "select": {"type": "point", "fields": ["year"], "on": "click", "clear": false},
+          "value": [{"year": 2025}]
+        }
+      ],
+      "mark": {"type": "bar", "cornerRadiusTopLeft": 2, "cornerRadiusTopRight": 2, "cursor": "pointer"},
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal",
+          "axis": {"title": null, "labelAngle": 0, "domain": false, "ticks": false}
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "count",
+          "type": "quantitative",
+          "axis": {"title": "Sightings", "format": "~s", "tickCount": 3, "domain": false, "ticks": false}
+        },
+        "color": {
+          "condition": {"param": "picked", "value": "#c0662b", "empty": false},
+          "value": "#ead2bf"
+        },
+        "tooltip": [
+          {"field": "year", "title": "Year"},
+          {"aggregate": "sum", "field": "count", "title": "Sightings", "format": ","}
+        ]
+      }
+    },
+    {
+      "description": "Map for the picked year.",
+      "width": 860,
+      "height": 560,
+      "projection": {
+        "type": "conicEqualArea",
+        "parallels": [-18, -36],
+        "rotate": [-132, 0],
+        "center": [0, -27]
+      },
+      "layer": [
+        {
+          "description": "Base map: land in a quiet fill so the circles stand out.",
+          "data": {
+            "url": "data/geo/australia-states.topojson",
+            "format": {"type": "topojson", "feature": "states"}
+          },
+          "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 1.5}
+        },
+        {
+          "description": "Grid squares for the picked year. The size scale is fixed (0 to the busiest square of any year), so a circle means the same in every year.",
+          "transform": [{"filter": {"param": "picked", "empty": false}}],
+          "mark": {"type": "circle", "color": "#c0662b", "opacity": 0.7, "stroke": "#f3f5f1", "strokeWidth": 0.5},
+          "encoding": {
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "size": {
+              "field": "count",
+              "type": "quantitative",
+              "scale": {"domain": [0, 6100], "range": [3, 1400]},
+              "legend": {
+                "title": "Sightings in a 100 km square",
+                "orient": "none",
+                "legendX": 20,
+                "legendY": 400,
+                "direction": "vertical",
+                "values": [50, 500, 2000, 6000],
+                "format": ",d",
+                "symbolFillColor": "#c0662b",
+                "symbolOpacity": 0.7,
+                "symbolStrokeColor": "#f3f5f1"
+              }
+            },
+            "tooltip": [
+              {"field": "year", "title": "Year"},
+              {"field": "count", "title": "Sightings", "format": ","},
+              {"field": "lat", "title": "Latitude"},
+              {"field": "lon", "title": "Longitude"}
+            ]
+          }
+        },
+        {
+          "description": "Big year label in the top-left corner (out at sea, north-west of WA), so the reader always knows which year is showing.",
+          "transform": [
+            {"filter": {"param": "picked", "empty": false}},
+            {"aggregate": [{"op": "sum", "field": "count", "as": "total"}], "groupby": ["year"]},
+            {"calculate": "toString(datum.year)", "as": "label"},
+            {"calculate": "format(datum.total, ',') + ' sightings'", "as": "sublabel"},
+            {"calculate": "112", "as": "lon"},
+            {"calculate": "-12", "as": "lat"}
+          ],
+          "layer": [
+            {
+              "mark": {"type": "text", "align": "left", "baseline": "bottom", "fontSize": 40, "fontWeight": 700, "color": "#1e2b2a"},
+              "encoding": {
+                "longitude": {"field": "lon", "type": "quantitative"},
+                "latitude": {"field": "lat", "type": "quantitative"},
+                "text": {"field": "label"}
+              }
+            },
+            {
+              "mark": {"type": "text", "align": "left", "baseline": "top", "dy": 4, "fontSize": 14, "color": "#5b6b66"},
+              "encoding": {
+                "longitude": {"field": "lon", "type": "quantitative"},
+                "latitude": {"field": "lat", "type": "quantitative"},
+                "text": {"field": "sublabel"}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "resolve": {"legend": {"size": "independent"}}
+}

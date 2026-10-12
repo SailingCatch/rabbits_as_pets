@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 1, small-multiple waffle charts. Each grid is 100 Australian households; filled squares are the households that own that kind of pet. The rabbit grid is worked out from the survey: 3% of households own small mammals and 51% of those keep rabbits, so about 1.5 in 100.",
+
+  "data": {"url": "data/ama/pets-in-australia-2025.csv"},
+
+  "transform": [
+    {"filter": "datum.year == 2025"},
+    {
+      "description": "Find the share of households with small mammals, for working out rabbits.",
+      "calculate": "datum.breakdown === 'households_by_pet' && datum.category === 'Small mammals' ? toNumber(datum.value) : 0",
+      "as": "small_mammal_share"
+    },
+    {"joinaggregate": [{"op": "max", "field": "small_mammal_share", "as": "small_mammals"}]},
+    {"filter": "(datum.breakdown === 'households_by_pet' && datum.category !== 'Other') || (datum.breakdown === 'small_mammal_type' && datum.category === 'Rabbits')"},
+    {
+      "calculate": "datum.category === 'Rabbits' ? datum.small_mammals * toNumber(datum.value) / 100 : toNumber(datum.value)",
+      "as": "per_100"
+    },
+    {"calculate": "datum.category === 'Rabbits'", "as": "is_rabbit"},
+    {"calculate": "datum.category + '  ' + format(datum.per_100, '.2~r') + '%'", "as": "panel"},
+    {
+      "description": "One row per square: 100 squares per pet type, numbered 0-99.",
+      "calculate": "sequence(0, 100)", "as": "square"
+    },
+    {"flatten": ["square"]},
+    {"calculate": "datum.square % 10", "as": "col"},
+    {"calculate": "floor(datum.square / 10)", "as": "row"},
+    {
+      "description": "How much of this square is filled: 1 for whole households, a fraction for the last part-square (e.g. 0.53 for rabbits).",
+      "calculate": "clamp(datum.per_100 - datum.square, 0, 1)", "as": "fill"
+    },
+    {"calculate": "datum.col + 0.08", "as": "x0"},
+    {"calculate": "datum.col + 0.92", "as": "x1"},
+    {"calculate": "datum.col + 0.08 + 0.84 * datum.fill", "as": "x_fill"},
+    {"calculate": "datum.row + 0.08", "as": "y0"},
+    {"calculate": "datum.row + 0.92", "as": "y1"}
+  ],
+
+  "facet": {
+    "field": "panel",
+    "type": "nominal",
+    "sort": {"field": "per_100", "op": "max", "order": "descending"},
+    "header": {"title": null, "labelAnchor": "start", "labelFontSize": 14, "labelPadding": 6}
+  },
+  "columns": 7,
+  "spacing": {"column": 22, "row": 16},
+
+  "spec": {
+    "width": 118,
+    "height": 118,
+    "layer": [
+      {
+        "description": "All 100 households, as faint squares.",
+        "mark": {"type": "rect", "color": "#dfe4dd", "cornerRadius": 1.5},
+        "encoding": {
+          "x": {"field": "x0", "type": "quantitative", "scale": {"domain": [0, 10]}, "axis": null},
+          "x2": {"field": "x1"},
+          "y": {"field": "y0", "type": "quantitative", "scale": {"domain": [0, 10]}, "axis": null},
+          "y2": {"field": "y1"}
+        }
+      },
+      {
+        "description": "Households with this pet. Rabbits in the pet colour, the rest in a quiet grey-blue so rabbits stand out.",
+        "transform": [{"filter": "datum.fill > 0"}],
+        "mark": {"type": "rect", "cornerRadius": 1.5},
+        "encoding": {
+          "x": {"field": "x0", "type": "quantitative"},
+          "x2": {"field": "x_fill"},
+          "y": {"field": "y0", "type": "quantitative"},
+          "y2": {"field": "y1"},
+          "color": {
+            "condition": {"test": "datum.is_rabbit", "value": "#4a64b0"},
+            "value": "#9aa9c9"
+          },
+          "tooltip": [
+            {"field": "category", "title": "Pet"},
+            {"field": "per_100", "title": "Households in 100", "format": ".2~r"}
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 3, line map over a dot map. Western Australia's three rabbit-proof fences (built 1902-1907) drawn over every wild rabbit sighting reported in 2024 and 2025. The fences didn't stop the rabbits: sightings sit on both sides.",
+
+  "width": "container",
+  "height": 600,
+
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [-18, -36],
+    "rotate": [-132, 0],
+    "center": [0, -27]
+  },
+
+  "layer": [
+    {
+      "description": "Base map.",
+      "data": {
+        "url": "data/geo/australia-states.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 1.5}
+    },
+    {
+      "description": "Sightings: one small, see-through dot per spot, so busy areas build up darker.",
+      "data": {
+        "url": "data/ala/sightings-points.csv",
+        "format": {"parse": {"lat": "number", "lon": "number", "count": "number"}}
+      },
+      "mark": {"type": "circle", "size": 7, "opacity": 0.4, "color": "#c0662b"},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"}
+      }
+    },
+    {
+      "description": "The three fences, in ink so they read as a man-made line across the land.",
+      "data": {
+        "url": "data/geo/rabbit-proof-fences.geojson",
+        "format": {"type": "json", "property": "features"}
+      },
+      "mark": {"type": "geoshape", "filled": false, "stroke": "#1e2b2a", "strokeWidth": 2.5, "strokeCap": "round"},
+      "encoding": {
+        "tooltip": [{"field": "properties.fence", "title": "Rabbit-proof fence"}]
+      }
+    },
+    {
+      "description": "Direct labels instead of a legend. Positions are placed by hand next to each line.",
+      "data": {
+        "values": [
+          {"lon": 120.4, "lat": -20.6, "text": "No. 1 fence"},
+          {"lon": 117.2, "lat": -30.2, "text": "No. 2"}
+        ]
+      },
+      "mark": {"type": "text", "align": "left", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": 8},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "text"}
+      }
+    },
+    {
+      "data": {"values": [{"lon": 114.6, "lat": -27.2, "text": "No. 3"}]},
+      "mark": {"type": "text", "align": "right", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": -6},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "text"}
+      }
+    },
+    {
+      "description": "Key for the dots, out in the Southern Ocean south-west of WA.",
+      "data": {"values": [{"lon": 113.5, "lat": -38.0}]},
+      "layer": [
+        {
+          "mark": {"type": "circle", "size": 40, "color": "#c0662b", "opacity": 0.8},
+          "encoding": {"longitude": {"field": "lon", "type": "quantitative"}, "latitude": {"field": "lat", "type": "quantitative"}}
+        },
+        {
+          "mark": {"type": "text", "align": "left", "dx": 9, "fontSize": 13, "color": "#5b6b66", "text": "Wild rabbit sightings, 2024–25"},
+          "encoding": {"longitude": {"field": "lon", "type": "quantitative"}, "latitude": {"field": "lat", "type": "quantitative"}}
+        }
+      ]
+    }
+  ]
+}

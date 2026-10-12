@@ -1,0 +1,21 @@
+breakdown,category,samples,note
+source,Pet (domestic) rabbits,1383,
+source,Wild rabbits,907,
+source,Hares,30,
+source,Unknown,457,"Most likely wild: submitted during the 2017 RHDVa-K5 release program and through the RabbitScan app. These four rows add to 2,777, six more than the paper's total of 2,771."
+state,NSW and ACT,674,The paper combines NSW and the ACT.
+state,VIC,943,
+state,SA,380,
+state,QLD,136,
+state,WA,328,
+state,TAS,300,
+state,NT,10,
+result,Positive,1643,
+result,Negative,1076,
+result,Not reported,52,"The paper doesn't say; this is the remainder of the 2,771 total."
+variant,RHDV2-4c,722,GI.4cP-GI.2. By December 2022 it was 98.5% (130 of 132) of positive samples.
+variant,RHDV2,563,GI.1bP-GI.2
+variant,RHDV2-4e,172,GI.4eP-GI.2
+variant,RHDVa-K5,140,GI.1aP-GI.1a; the strain deliberately released to control wild rabbits from 2017.
+variant,RHDV1,33,GI.1c
+variant,RHDVa-Aus,10,GI.1a

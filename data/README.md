@@ -22,6 +22,11 @@ ready-to-use files are committed (about 360 KB in total).
 | `rspca/other-animals-by-state.csv` | `scripts/extract_rspca.py` | 6, 7, 9, 10 |
 | `rspca/received-by-animal.csv` | `scripts/extract_rspca.py` | 8 |
 | `legal/rabbit-legal-status.csv` | compiled by hand | 2 |
+| `peng/lagovirus-samples.csv` | typed in from the paper | 9 |
+| `ama/pets-in-australia-2025.csv` | typed in from the report | 1 |
+| `history/timeline.csv` | typed in from CSIRO, PestSmart, DPIRD | 2 |
+| `geo/rabbit-proof-fences.geojson` | `scripts/build_fences.sh` | 3 |
+| `ramsey/rhdv2-site-abundance.csv` | typed in from the paper | 4 |
 
 All files join on one column, **`state`**: the short codes `NSW`, `VIC`,
 `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT`.
@@ -82,7 +87,7 @@ download date are copied into `ala/source.json`.
 **Output columns**
 
 - `sightings-points.csv`: `year`, `state`, `lat`, `lon`, `count` (2024–2025; each row is a ~1 km spot and how many records were made there)
-- `sightings-grid-by-year.csv`: `year`, `lon`, `lat`, `count` (records in each 1° square, 2019–2025; lon/lat are the square's centre)
+- `sightings-grid-by-year.csv`: `year`, `lon`, `lat`, `count` (records in each 1° square, 2010–2025; lon/lat are the square's centre)
 - `sightings-by-month.csv`: `year`, `month`, `count` (2010–2025)
 - `sightings-by-state-year.csv`: `year`, `state`, `count` (2010–2025; divide by `area_km2` for chart 5)
 
@@ -168,3 +173,80 @@ or `Banned`), `rule` (one plain-English sentence shown in the tooltip),
 - [x] ACT (Mandatory Code of Practice DI2024-231, legislation.act.gov.au)
 - [ ] NSW: the DPI site blocks automated access, so check in a browser and add a URL
 - [ ] VIC: check the Agriculture Victoria "Guidelines on keeping pet rabbits" page in a browser
+
+---
+
+## 5. Rabbit virus testing (Peng et al. 2023)
+
+**Source:** Peng, N. Y. G., Hall, R. N., Huang, N., West, P., et al. (2023).
+Utilizing molecular epidemiology and citizen science for the surveillance
+of lagoviruses in Australia. *Viruses*, 15(12), 2348.
+<https://doi.org/10.3390/v15122348> (open access, CC BY 4.0;
+full text on PubMed Central, PMC10747141).
+
+CSIRO tested 2,771 dead rabbits and hares sent in by the public between
+January 2015 and December 2022. `peng/lagovirus-samples.csv` holds the
+numbers stated in the paper's Results (sections 3.1 and 3.2), in long form:
+
+**Columns:** `breakdown` (`source`, `state`, `result` or `variant`),
+`category`, `samples`, `note`. Filter on `breakdown` in a spec.
+
+- The paper's sample sources add to 2,777, six more than its total of 2,771.
+- `variant` counts are positive samples only (1,640 of the 1,643 positives).
+- Year-by-year splits are only shown in the paper's Figure 1, not as numbers.
+
+---
+
+## 6. Pet ownership (Animal Medicines Australia 2025)
+
+**Source:** Animal Medicines Australia (2025). *Pets in Australia: A
+national survey of pets and people.*
+[PDF](https://animalmedicinesaustralia.org.au/wp-content/uploads/2025/09/SNR-2403006-Pet-Ownership-Study-2025-Designed_F3.pdf)
+
+`ama/pets-in-australia-2025.csv` holds the headline figures: households with
+pets (2016–2025), households by pet type, estimated pet numbers, which
+small mammals people keep (rabbits 51%) and why. **Columns:** `breakdown`,
+`category`, `value`, `unit`, `year`, `note`, `pdf_page`.
+
+National figures only, from a survey of 2,450 people (65 of them
+small-mammal owners), so use them for context and annotations rather than
+for maps.
+
+---
+
+## 7. Timeline of rabbit control (compiled)
+
+`history/timeline.csv`: one row per event, with the page it came from.
+**Columns:** `year`, `label` (short, shown on the chart), `detail` (tooltip),
+`theme` (`arrival`, `barrier`, `virus`, `resistance`), `source_url`.
+Population figures (600 million in 1950, about 300 million in 1995) are the
+sources' estimates, so the page says so. Sources disagree on two dates:
+calicivirus got out in 1995 and was officially released in 1996, and RHDV2
+is dated 2014 (PestSmart) or 2015 (CSIRO); the table uses CSIRO's.
+
+---
+
+## 8. Rabbit numbers before and after RHDV2 (Ramsey et al. 2023)
+
+**Source:** Ramsey, D. S. L. et al. (2023). Sustained impact of RHDV2 on
+wild rabbit populations across Australia eight years after its initial
+detection. *Viruses*, 15(5), 1159. <https://doi.org/10.3390/v15051159>
+(open access, CC BY 4.0).
+
+`ramsey/rhdv2-site-abundance.csv` is the paper's Table 1: the estimated
+typical (equilibrium) winter–spring rabbit abundance, in rabbits per km of
+spotlight transect, before and after RHDV2 reached each site.
+**Columns:** `site`, `state`, `before`, `after`, `change` (proportion,
+e.g. −0.82). The paper's average across all sites is −0.64.
+
+---
+
+## 9. Rabbit-proof fences (DPIRD)
+
+**Source:** WA Department of Primary Industries and Regional Development,
+Historic Number 1, 2 and 3 Rabbit Proof Fence (DPIRD-046, 047, 048),
+CC BY 3.0 AU. Run `scripts/build_fences.sh`; it downloads the three lines
+from the WA Government's public map service (no login) and simplifies them
+into `geo/rabbit-proof-fences.geojson` (about 10 KB, property `fence`).
+The source describes the lines as indicative historic locations.
+

@@ -1,0 +1,27 @@
+breakdown,category,value,unit,year,note,pdf_page
+households_with_pet,All pets,73,% of households,2025,,9
+households_with_pet,All pets,69,% of households,2022,,9
+households_with_pet,All pets,61,% of households,2019,,9
+households_with_pet,All pets,62,% of households,2016,,9
+households_by_pet,Dogs,49,% of households,2025,,9
+households_by_pet,Cats,34,% of households,2025,,9
+households_by_pet,Fish,11,% of households,2025,,9
+households_by_pet,Birds,9,% of households,2025,,9
+households_by_pet,Small mammals,3,% of households,2025,,9
+households_by_pet,Reptiles,3,% of households,2025,,9
+households_by_pet,Other,1,% of households,2025,,9
+pet_population,Fish,12100000,animals,2025,,14
+pet_population,Dogs,7400000,animals,2025,,12
+pet_population,Cats,5800000,animals,2025,,14
+pet_population,Birds,4400000,animals,2025,,15
+pet_population,Small mammals,770000,animals,2025,,15
+pet_population,Reptiles,512000,animals,2025,,15
+small_mammal_type,Rabbits,51,% of small-mammal-owning households,2025,"Households can own more than one type, so these add to more than 100%.",15
+small_mammal_type,Guinea pigs,43,% of small-mammal-owning households,2025,,15
+small_mammal_type,Ferrets,18,% of small-mammal-owning households,2025,,15
+small_mammal_type,Mice or rats,17,% of small-mammal-owning households,2025,,15
+small_mammal_reason,Companionship,34,% of small-mammal owners,2025,,15
+small_mammal_reason,Hobby,33,% of small-mammal owners,2025,,15
+small_mammal_reason,Relaxation,32,% of small-mammal owners,2025,,15
+small_mammal_reason,Mental health,29,% of small-mammal owners,2025,,15
+small_mammal_reason,Mental health,8,% of small-mammal owners,2022,,15

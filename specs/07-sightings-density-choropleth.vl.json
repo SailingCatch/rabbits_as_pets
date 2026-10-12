@@ -1,0 +1,271 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 7, choropleth. Wild rabbit sightings reported each year for every 1,000 km² of land, averaged over 2021-2025, by state and territory. A log colour scale, because the ACT's rate is over 2,000 times the NT's.",
+  "data": {
+    "url": "data/ala/sightings-by-state-year.csv",
+    "format": {
+      "parse": {
+        "year": "number",
+        "count": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.year >= 2021"
+    },
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "count",
+          "as": "sightings"
+        }
+      ],
+      "groupby": [
+        "state"
+      ]
+    },
+    {
+      "lookup": "state",
+      "from": {
+        "data": {
+          "url": "data/geo/state-centroids.csv",
+          "format": {
+            "parse": {
+              "area_km2": "number"
+            }
+          }
+        },
+        "key": "state",
+        "fields": [
+          "name",
+          "area_km2"
+        ]
+      }
+    },
+    {
+      "calculate": "datum.sightings / 5 / datum.area_km2 * 1000",
+      "as": "per_1000_km2"
+    },
+    {
+      "lookup": "state",
+      "from": {
+        "data": {
+          "url": "data/geo/australia-states.topojson",
+          "format": {
+            "type": "topojson",
+            "feature": "states"
+          }
+        },
+        "key": "properties.state"
+      },
+      "as": "geo"
+    }
+  ],
+  "width": "container",
+  "height": 440,
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -132,
+      0
+    ],
+    "center": [
+      0,
+      -27
+    ]
+  },
+  "layer": [
+    {
+      "description": "States, shaded by sightings per 1,000 km².",
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#f3f5f1",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "shape": {
+          "field": "geo",
+          "type": "geojson"
+        },
+        "color": {
+          "field": "per_1000_km2",
+          "type": "quantitative",
+          "scale": {
+            "type": "log",
+            "domain": [
+              0.02,
+              100
+            ],
+            "range": [
+              "#f6e7c8",
+              "#e9c27f",
+              "#d3913f",
+              "#a9611f",
+              "#6e3a12"
+            ]
+          },
+          "legend": {
+            "title": "Sightings a year per 1,000 km²",
+            "format": "~g",
+            "values": [
+              0.1,
+              1,
+              10,
+              100
+            ],
+            "gradientLength": 240
+          }
+        },
+        "tooltip": [
+          {
+            "field": "name",
+            "title": "Where"
+          },
+          {
+            "field": "per_1000_km2",
+            "title": "Sightings a year per 1,000 km²",
+            "format": ".2~f"
+          },
+          {
+            "field": "sightings",
+            "title": "Sightings 2021–25",
+            "format": ","
+          }
+        ]
+      }
+    },
+    {
+      "description": "State code and value on each state. The ACT is too small, so its label sits out to sea with a short leader line.",
+      "transform": [
+        {
+          "lookup": "state",
+          "from": {
+            "data": {
+              "url": "data/geo/state-centroids.csv",
+              "format": {
+                "parse": {
+                  "lon": "number",
+                  "lat": "number"
+                }
+              }
+            },
+            "key": "state",
+            "fields": [
+              "lon",
+              "lat"
+            ]
+          }
+        },
+        {
+          "calculate": "datum.state === 'ACT' ? toNumber(datum.lon) + 4.5 : toNumber(datum.lon)",
+          "as": "label_lon"
+        },
+        {
+          "calculate": "datum.state === 'ACT' ? toNumber(datum.lat) - 1.5 : toNumber(datum.lat)",
+          "as": "label_lat"
+        },
+        {
+          "calculate": "datum.state + ' ' + format(datum.per_1000_km2, datum.per_1000_km2 < 1 ? '.2f' : '.0f')",
+          "as": "label"
+        }
+      ],
+      "layer": [
+        {
+          "transform": [
+            {
+              "filter": "datum.state === 'ACT'"
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "color": "#1e2b2a",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "longitude2": {
+              "field": "label_lon"
+            },
+            "latitude2": {
+              "field": "label_lat"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.state !== 'ACT'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 13,
+            "fontWeight": 600,
+            "align": "center"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "label_lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "label_lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            },
+            "color": {
+              "condition": {
+                "test": "datum.per_1000_km2 > 5 && datum.state !== 'ACT'",
+                "value": "#ffffff"
+              },
+              "value": "#1e2b2a"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.state === 'ACT'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 13,
+            "fontWeight": 600,
+            "align": "left",
+            "dx": 3,
+            "color": "#1e2b2a"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "label_lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "label_lat",
+              "type": "quantitative"
+            },
+            "text": {
+              "field": "label"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

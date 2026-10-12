@@ -9,9 +9,9 @@ unzipped). The charts only need counts, so this script writes:
                                          columns: year, state, lat, lon, count
                                          -> chart 1 (dot map)
 
-    data/ala/sightings-grid-by-year.csv  records per 1° square (~100 km)
+    data/ala/sightings-grid-by-year.csv  records per 1° square (~100 km), per year
                                          columns: year, lon, lat, count
-                                         -> chart 3 (small-multiple maps)
+                                         -> chart 3 (map with a year picker)
 
     data/ala/sightings-by-month.csv      records per month
                                          columns: year, month, count
@@ -43,7 +43,7 @@ from pathlib import Path
 # ---- Settings you might change ------------------------------------------
 
 POINT_YEARS = {2024, 2025}          # years drawn as individual dots (chart 1)
-GRID_YEARS = range(2019, 2026)      # years shown as small multiples (chart 3)
+GRID_YEARS = range(2010, 2026)      # years you can pick on the map (chart 3)
 COUNT_YEARS = range(2010, 2026)     # years in the heatmap and state chart (charts 4, 5)
 COORD_DECIMALS = 2                  # 2 decimals ≈ 1 km, plenty for a national map
 

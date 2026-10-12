@@ -1,0 +1,101 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 2, annotated timeline. Key moments in the fight against wild rabbits, 1859-2017. Labels alternate above and below the line at two heights so neighbours don't collide; hover a dot for the full story.",
+
+  "data": {"url": "data/history/timeline.csv", "format": {"parse": {"year": "number"}}},
+
+  "transform": [
+    {"window": [{"op": "row_number", "as": "n"}], "sort": [{"field": "year"}]},
+    {
+      "description": "Odd events go above the line, even ones below; every second pair sits higher.",
+      "calculate": "(datum.n % 2 === 1 ? 1 : -1) * (floor((datum.n - 1) / 2) % 2 === 0 ? 1 : 2)",
+      "as": "level"
+    },
+    {"calculate": "toString(datum.year)", "as": "year_label"},
+    {
+      "calculate": "{'arrival': 'Rabbits spread', 'barrier': 'Fences', 'virus': 'Viruses released', 'resistance': 'Rabbits adapt'}[datum.theme]",
+      "as": "theme_label"
+    }
+  ],
+
+  "width": "container",
+  "height": 300,
+
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "scale": {"domain": [1850, 2025]},
+      "axis": {"title": null, "format": "d", "values": [1850, 1875, 1900, 1925, 1950, 1975, 2000, 2025], "grid": false, "domain": false, "ticks": false, "labelPadding": 8}
+    }
+  },
+
+  "layer": [
+    {
+      "description": "The time line itself.",
+      "mark": {"type": "rule", "color": "#c9d1c8", "strokeWidth": 2},
+      "encoding": {
+        "x": {"datum": 1850, "type": "quantitative"},
+        "x2": {"datum": 2025},
+        "y": {"datum": 0, "type": "quantitative", "scale": {"domain": [-2.6, 2.6]}, "axis": null}
+      }
+    },
+    {
+      "description": "Stems from the line up or down to each label.",
+      "mark": {"type": "rule", "color": "#c9d1c8", "strokeWidth": 1},
+      "encoding": {
+        "y": {"field": "level", "type": "quantitative"},
+        "y2": {"datum": 0}
+      }
+    },
+    {
+      "description": "One dot per event, coloured by what kind of event it was.",
+      "mark": {"type": "circle", "size": 160, "opacity": 1, "stroke": "#f3f5f1", "strokeWidth": 2, "cursor": "help"},
+      "encoding": {
+        "y": {"datum": 0, "type": "quantitative"},
+        "color": {
+          "field": "theme_label",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Rabbits spread", "Fences", "Viruses released", "Rabbits adapt"],
+            "range": ["#c0662b", "#1e2b2a", "#00806a", "#a3478f"]
+          },
+          "legend": {"title": null, "orient": "top", "direction": "horizontal"}
+        },
+        "tooltip": [
+          {"field": "year", "title": "Year"},
+          {"field": "label", "title": "What happened"},
+          {"field": "detail", "title": "Details"}
+        ]
+      }
+    },
+    {
+      "description": "Year and headline above the line.",
+      "transform": [{"filter": "datum.level > 0"}],
+      "layer": [
+        {
+          "mark": {"type": "text", "baseline": "bottom", "dy": -20, "fontSize": 13, "fontWeight": 700, "color": "#1e2b2a"},
+          "encoding": {"y": {"field": "level", "type": "quantitative"}, "text": {"field": "year_label"}}
+        },
+        {
+          "mark": {"type": "text", "baseline": "bottom", "dy": -4, "fontSize": 13, "color": "#5b6b66"},
+          "encoding": {"y": {"field": "level", "type": "quantitative"}, "text": {"field": "label"}}
+        }
+      ]
+    },
+    {
+      "description": "Year and headline below the line.",
+      "transform": [{"filter": "datum.level < 0"}],
+      "layer": [
+        {
+          "mark": {"type": "text", "baseline": "top", "dy": 4, "fontSize": 13, "fontWeight": 700, "color": "#1e2b2a"},
+          "encoding": {"y": {"field": "level", "type": "quantitative"}, "text": {"field": "year_label"}}
+        },
+        {
+          "mark": {"type": "text", "baseline": "top", "dy": 20, "fontSize": 13, "color": "#5b6b66"},
+          "encoding": {"y": {"field": "level", "type": "quantitative"}, "text": {"field": "label"}}
+        }
+      ]
+    }
+  ]
+}

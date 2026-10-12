@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rabbits as Pets in Australia</title>
-  <meta name="description" content="A pet on the couch, a pest in the paddock: a data story about keeping rabbits in Australia.">
+  <title>Pet or Pest? Keeping a Rabbit in Australia</title>
+  <meta name="description" content="Why is one of the world's favourite small pets so rare, and so tightly controlled, in Australia? A data story.">
 
   <!-- Fonts: Bricolage Grotesque for headings and chart labels, Literata for reading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,177 +22,300 @@
 <body>
 
 <!-- ======================================================================
-     HERO: the hook. One sentence of tension, then straight into a map.
+     HERO: the question the whole page answers, and three numbers
      ====================================================================== -->
 <header class="hero">
   <div class="column">
-    <h1>A pet on the couch, a pest in the paddock</h1>
+    <p class="kicker">A data story</p>
+    <h1>Pet or pest? Keeping a rabbit in Australia</h1>
     <p class="lede">
-      Rabbits are one of Australia's favourite small pets and one of its worst
-      invasive animals. That double life explains why owning one comes with
-      rules no dog or cat owner ever has to think about.
+      Australians love their pets, but very few keep a rabbit. The reason lies
+      in the paddock, not the living room: the same animal that sits on a
+      child's lap is the country's most costly pest.
     </p>
-    <p class="byline">By &lt;your name&gt; &middot; October 2026</p>
+    <ul class="stats">
+      <li>
+        <span class="stat__number stat__number--pet">73%</span>
+        <span class="stat__label">of Australian households have a pet</span>
+      </li>
+      <li>
+        <span class="stat__number stat__number--pet">1 in 65</span>
+        <span class="stat__label">households keeps a rabbit</span>
+      </li>
+      <li>
+        <span class="stat__number stat__number--pest">600 million</span>
+        <span class="stat__label">wild rabbits at their peak, in 1950</span>
+      </li>
+    </ul>
+    <p class="byline">By Samuel Herzog &middot; October 2026</p>
   </div>
 </header>
+
+<!-- Contents: sticks to the top of the screen while reading -->
+<nav class="toc" aria-label="Contents">
+  <ol>
+    <li><a href="#pet-lovers">01 Pet lovers</a></li>
+    <li><a href="#history">02 A plague</a></li>
+    <li><a href="#viruses">03 The virus war</a></li>
+    <li><a href="#today">04 Still everywhere</a></li>
+    <li><a href="#rules">05 Rules and risks</a></li>
+    <li><a href="#shelters">06 When it goes wrong</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ol>
+</nav>
 
 <main>
 
   <!-- ====================================================================
-       SECTION 1: wild rabbits are everywhere people live
+       01 A NATION OF PET LOVERS
        ==================================================================== -->
-  <section id="everywhere">
-    <h2>Rabbits are never far away</h2>
+  <section id="pet-lovers">
+    <p class="kicker">01 &middot; A nation of pet lovers</p>
+    <h2>Dogs, cats, fish&hellip; and hardly any rabbits</h2>
     <p>
-      Every dot below is a <span class="key key--pest">wild rabbit</span>
-      someone reported to the Atlas of Living Australia. They cluster where
-      people live and farm, which is exactly where most pet rabbits live too.
+      Nearly three in four Australian households now have a pet, more than
+      ever before. Dogs and cats lead the way. Only 3% of households keep
+      small mammals, and about half of those keep
+      <span class="key key--pet">rabbits</span>: roughly 1.5 homes in every
+      100.
     </p>
 
     <figure class="chart wide">
-      <h3>Reported wild rabbit sightings</h3>
-      <p class="chart__subtitle">Each dot is one record. Choose a year below the map.</p>
+      <h3>Out of every 100 Australian households, how many have&hellip;</h3>
+      <p class="chart__subtitle">Each grid is 100 households. Hover a square for the number.</p>
       <div id="chart-01" class="chart__canvas"></div>
       <figcaption>
-        Sightings are reported by the public and by surveys, so they show where
-        people looked as well as where rabbits are.
-        Source: Atlas of Living Australia.
+        Households can own more than one kind of pet. Rabbits are worked out
+        from two survey figures: 3% of households own small mammals, and 51%
+        of those keep rabbits.
+        Source: Animal Medicines Australia, <em>Pets in Australia</em> 2025.
       </figcaption>
     </figure>
+
+    <p>
+      Why so few? Part of the answer is how much space and care a rabbit
+      needs. The bigger part is history.
+    </p>
   </section>
 
   <!-- ====================================================================
-       SECTION 2: the rules depend on where you live
+       02 FROM A FEW RABBITS TO 600 MILLION
        ==================================================================== -->
-  <section id="rules">
-    <h2>Where you're allowed to keep one</h2>
+  <section id="history">
+    <p class="kicker">02 &middot; A plague</p>
+    <h2>From a few rabbits to 600 million</h2>
     <p>
-      In Queensland, keeping a pet rabbit is illegal under the Biosecurity Act
-      2014. The maximum penalty is 500 penalty units, about $83,450. Everywhere
-      else, rabbits can be kept as pets, though some places add rules of their own.
+      In 1859 a Victorian grazier released rabbits so he could hunt them.
+      Within about 70 years they covered 70% of the continent, the fastest
+      known invasion by a mammal anywhere in the world.
     </p>
 
     <figure class="chart wide">
-      <h3>Can you keep a pet rabbit here?</h3>
-      <p class="chart__subtitle">Hover over a state or territory for the rule and its source.</p>
+      <h3>160 years of trying to stop the rabbit</h3>
+      <p class="chart__subtitle">Hover a dot for the full story.</p>
       <div id="chart-02" class="chart__canvas"></div>
       <figcaption>
-        Source: each state and territory government's website (linked in the tooltip).
+        Population figures are official estimates, not counts.
+        Sources: CSIRO; PestSmart (Centre for Invasive Species Solutions);
+        WA Department of Primary Industries and Regional Development.
       </figcaption>
     </figure>
+
+    <div class="split">
+      <div class="split__text">
+        <h3>A fence across a state</h3>
+        <p>
+          Between 1902 and 1907 Western Australia built three rabbit-proof
+          fences to stop rabbits spreading west. Today
+          <span class="key key--pest">wild rabbits</span> are reported on both
+          sides of every one of them.
+        </p>
+      </div>
+      <figure class="chart">
+        <div id="chart-03" class="chart__canvas"></div>
+        <figcaption>
+          Fence lines: DPIRD historic rabbit-proof fences, CC BY 3.0 AU.
+          Sightings: Atlas of Living Australia.
+        </figcaption>
+      </figure>
+    </div>
   </section>
 
   <!-- ====================================================================
-       SECTION 3: the wild population, over time and across the year
+       03 THE VIRUS WAR
        ==================================================================== -->
-  <section id="wild">
-    <h2>The wild ones</h2>
+  <section id="viruses">
+    <p class="kicker">03 &middot; The virus war</p>
+    <h2>Every new virus knocks them down. They come back.</h2>
     <p>
-      Why should a pet owner care about wild rabbits? Because they carry the
-      diseases that kill pets, and because they're the reason the rules exist.
+      Fences didn't work, so Australia turned to disease. Myxomatosis in 1950,
+      then rabbit calicivirus in 1995. Each worked for a while, until the
+      rabbits that survived bred a tougher population.
+    </p>
+
+    <div class="split">
+      <div class="split__text">
+        <h3>RHDV2: the latest wave</h3>
+        <p>
+          A new strain, RHDV2, arrived in 2015 and crossed the continent in
+          18 months. At six long-term monitoring sites, rabbit numbers fell by
+          an average of 64%.
+        </p>
+        <p>
+          The scale on the chart multiplies at each step, so lines with the
+          same percentage drop have the same slope.
+        </p>
+      </div>
+      <figure class="chart">
+        <h3>Wild rabbits counted at night, per km of survey</h3>
+        <p class="chart__subtitle">Before and after RHDV2 arrived at each site.</p>
+        <div id="chart-04" class="chart__canvas"></div>
+        <figcaption>
+          Numbers are the researchers' estimates of typical winter&ndash;spring
+          abundance. Source: Ramsey et al. (2023), <em>Viruses</em> 15(5):1159.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       04 STILL EVERYWHERE
+       ==================================================================== -->
+  <section id="today">
+    <p class="kicker">04 &middot; Still everywhere</p>
+    <h2>Wild rabbits live where people live</h2>
+    <p>
+      Rabbits are still reported across the south of the country, in
+      farmland, bush and suburbs, which is exactly where most pet rabbits
+      live too.
     </p>
 
     <figure class="chart wide">
-      <h3>Where sightings were reported, year by year</h3>
-      <p class="chart__subtitle">Circles grow with the number of records in each area.</p>
-      <div id="chart-03" class="chart__canvas"></div>
-      <figcaption>Source: Atlas of Living Australia.</figcaption>
+      <h3>Where wild rabbits were reported, year by year</h3>
+      <p class="chart__subtitle">Click a year to see its map. Circles grow with the number of sightings in each 100 km square.</p>
+      <div id="chart-05" class="chart__canvas"></div>
+      <figcaption>
+        Sightings are reported by the public and by surveys, so they show where
+        people looked as well as where rabbits are. The 2019 peak comes from a
+        jump in reports to FeralScan, a pest-reporting app.
+        Source: Atlas of Living Australia.
+      </figcaption>
     </figure>
 
     <div class="wide pair">
       <figure class="chart">
-        <h3>When people see rabbits</h3>
-        <p class="chart__subtitle">Records by month and year. Darker means more.</p>
-        <div id="chart-04" class="chart__canvas"></div>
+        <h3>Most sightings come in autumn</h3>
+        <p class="chart__subtitle">Sightings by month and year. Darker means more. Across 2010&ndash;2025, March to May has the most.</p>
+        <div id="chart-06" class="chart__canvas"></div>
         <figcaption>Source: Atlas of Living Australia.</figcaption>
       </figure>
 
       <figure class="chart">
-        <h3>Sightings for every 1,000 km²</h3>
-        <p class="chart__subtitle">By state and territory.</p>
-        <div id="chart-05" class="chart__canvas"></div>
-        <figcaption>Sources: Atlas of Living Australia; Australian Bureau of Statistics.</figcaption>
+        <h3>The ACT has the most sightings for its size</h3>
+        <p class="chart__subtitle">Sightings a year for every 1,000 km², 2021&ndash;2025.</p>
+        <div id="chart-07" class="chart__canvas"></div>
+        <figcaption>
+          Each colour step is ten times the one before.
+          Sources: Atlas of Living Australia; Australian Bureau of Statistics.
+        </figcaption>
       </figure>
     </div>
   </section>
 
   <!-- ====================================================================
-       SECTION 4: small pets in shelters (RSPCA "Other animals")
+       05 THE RULES, AND THE RISKS
+       ==================================================================== -->
+  <section id="rules">
+    <p class="kicker">05 &middot; Rules and risks</p>
+    <h2>Why owning a rabbit comes with rules</h2>
+    <p>
+      Because rabbits are such a costly pest, every state treats them
+      differently from dogs and cats.
+    </p>
+
+    <div class="split split--flip">
+      <div class="split__text">
+        <h3>Banned in Queensland</h3>
+        <p>
+          In Queensland keeping a pet rabbit is illegal under the Biosecurity
+          Act 2014. South Australia requires an escape-proof cage by law, and
+          the ACT has a mandatory code of practice. Everywhere else, domestic
+          rabbits can be kept.
+        </p>
+      </div>
+      <figure class="chart">
+        <h3>Can you keep a pet rabbit here?</h3>
+        <p class="chart__subtitle">Hover a state for the rule and its source.</p>
+        <div id="chart-08" class="chart__canvas"></div>
+        <figcaption>Source: each state and territory government's website (linked in the tooltip).</figcaption>
+      </figure>
+    </div>
+
+    <p>
+      The viruses released to control wild rabbits kill pet rabbits too, and
+      insects can carry them from wild rabbits to a backyard hutch. Vaccines
+      protect pets against calicivirus, but no myxomatosis vaccine is
+      registered in Australia.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Half the rabbits tested for the virus were pets</h3>
+      <p class="chart__subtitle">2,777 dead rabbits and hares sent to CSIRO for testing, 2015&ndash;2022.</p>
+      <div id="chart-09" class="chart__canvas"></div>
+      <figcaption>
+        59% of samples tested positive for a rabbit calicivirus.
+        Source: Peng et al. (2023), <em>Viruses</em> 15(12):2348.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       06 WHEN IT DOESN'T WORK OUT
        ==================================================================== -->
   <section id="shelters">
-    <h2>When small pets need a new home</h2>
+    <p class="kicker">06 &middot; When it goes wrong</p>
+    <h2>When a small pet ends up in a shelter</h2>
     <p>
       The RSPCA doesn't count rabbits on their own. It groups them with other
-      small pets such as guinea pigs, ferrets, mice and birds under
-      &ldquo;other animals&rdquo;. These charts use that group, so they tell us
-      about <span class="key key--pet">small pets including rabbits</span>,
-      not rabbits alone.
+      <span class="key key--pet">small pets</span> such as guinea pigs,
+      ferrets, mice and birds, so these charts show that whole group.
     </p>
 
-    <figure class="chart wide">
-      <h3>Small pets taken in by the RSPCA, by state</h3>
-      <p class="chart__subtitle">Circle size shows how many arrived; colour shows the share found a new home.</p>
-      <div id="chart-06" class="chart__canvas"></div>
-      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
-    </figure>
-
-    <figure class="chart wide">
-      <h3>Arrivals by state over time</h3>
-      <div id="chart-07" class="chart__canvas"></div>
-      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
-    </figure>
-
-    <div class="wide pair">
+    <div class="split">
+      <div class="split__text">
+        <h3>More than 6,000 a year</h3>
+        <p>
+          RSPCA shelters took in 6,267 small pets in 2024&ndash;25. Queensland,
+          New South Wales and Victoria received the most.
+        </p>
+      </div>
       <figure class="chart">
-        <h3>Small pets compared with dogs and cats</h3>
-        <div id="chart-08" class="chart__canvas"></div>
-        <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
-      </figure>
-
-      <figure class="chart">
-        <h3>More saved than fifteen years ago</h3>
-        <div id="chart-09" class="chart__canvas"></div>
-        <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+        <h3>Small pets taken in by the RSPCA, 2024&ndash;25</h3>
+        <p class="chart__subtitle">Circle size shows how many arrived; colour shows the share found a new home.</p>
+        <div id="chart-10" class="chart__canvas"></div>
+        <figcaption>
+          The 2024&ndash;25 report labels its NSW and NT columns the wrong way
+          round; they are swapped back here. RSPCA ACT, NT and TAS figures
+          exclude council pound animals. Source: RSPCA Australia annual
+          statistics.
+        </figcaption>
       </figure>
     </div>
 
     <figure class="chart wide">
-      <h3>What happens to them, by state</h3>
-      <div id="chart-10" class="chart__canvas"></div>
-      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
-    </figure>
-  </section>
-
-  <!-- ====================================================================
-       SECTION 5: the disease link between pets and pests
-       ==================================================================== -->
-  <section id="disease">
-    <h2>A disease that crosses the fence</h2>
-    <p>
-      Rabbit calicivirus spreads from wild rabbits to pets through insects,
-      contaminated grass and even shoes. Vaccines protect against it, but there
-      is no vaccine for myxomatosis allowed in Australia, because it could
-      spread into the wild rabbits it's meant to control.
-    </p>
-
-    <figure class="chart wide">
-      <h3>Pets were tested more than wild rabbits</h3>
+      <h3>What happened to them, by state</h3>
+      <p class="chart__subtitle">2023&ndash;24, the latest year whose outcomes add up. Number received in brackets.</p>
       <div id="chart-11" class="chart__canvas"></div>
-      <figcaption>Source: Peng et al. (2023), <em>Viruses</em> 15(12):2348.</figcaption>
+      <figcaption>
+        The Northern Territory (17 animals) is left out because its numbers are
+        too small to compare. Source: RSPCA Australia annual statistics.
+      </figcaption>
     </figure>
-  </section>
 
-  <!-- ====================================================================
-       SECTION 6: what owners can do
-       ==================================================================== -->
-  <section id="care">
-    <h2>Looking after a rabbit well</h2>
-
-    <figure class="chart wide">
-      <h3>Where rabbit care falls short</h3>
-      <div id="chart-12" class="chart__canvas"></div>
-      <figcaption>Source: Agriculture Victoria rabbit owner survey.</figcaption>
-    </figure>
+    <p>
+      Before getting a rabbit, check your state's rules, plan for vaccination
+      and insect-proof housing, and make sure there's room for it to run.
+    </p>
   </section>
 
   <!-- ====================================================================
@@ -214,6 +337,36 @@
         <a href="https://www.rspca.org.au/about/annual-statistics">rspca.org.au</a>
       </li>
       <li>
+        <strong>Pet ownership:</strong> Animal Medicines Australia (2025),
+        <em>Pets in Australia: A national survey of pets and people</em>.
+        <a href="https://animalmedicinesaustralia.org.au/wp-content/uploads/2025/09/SNR-2403006-Pet-Ownership-Study-2025-Designed_F3.pdf">animalmedicinesaustralia.org.au</a>
+      </li>
+      <li>
+        <strong>Virus testing:</strong> Peng, N. Y. G. et al. (2023). Utilizing
+        molecular epidemiology and citizen science for the surveillance of
+        lagoviruses in Australia. <em>Viruses</em> 15(12):2348.
+        <a href="https://doi.org/10.3390/v15122348">doi:10.3390/v15122348</a>
+      </li>
+      <li>
+        <strong>Rabbit numbers at monitoring sites:</strong> Ramsey, D. S. L.
+        et al. (2023). Sustained impact of RHDV2 on wild rabbit populations
+        across Australia eight years after its initial detection.
+        <em>Viruses</em> 15(5):1159.
+        <a href="https://doi.org/10.3390/v15051159">doi:10.3390/v15051159</a>
+      </li>
+      <li>
+        <strong>History:</strong> CSIRO,
+        <a href="https://www.csiro.au/en/research/animals/pests/Biological-control-of-rabbits">Biological control of rabbits</a>;
+        PestSmart,
+        <a href="https://pestsmart.org.au/toolkit-resource/key-facts-about-rabbit-biocontrol-in-australia/">Key facts about rabbit biocontrol in Australia</a>.
+      </li>
+      <li>
+        <strong>Rabbit-proof fences:</strong> WA Department of Primary
+        Industries and Regional Development, Historic Number 1, 2 and 3 Rabbit
+        Proof Fence (DPIRD-046/047/048), CC BY 3.0 AU.
+        <a href="https://catalogue.data.wa.gov.au/dataset/historic-number-2-rabbit-proof-fence-dafwa-052">data.wa.gov.au</a>
+      </li>
+      <li>
         <strong>State boundaries:</strong> Australian Bureau of Statistics,
         Australian Statistical Geography Standard Edition 3, 2021, CC BY 4.0.
         <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files">abs.gov.au</a>
@@ -229,9 +382,10 @@
 
 <footer class="column">
   <p>
-    Created by &lt;your name&gt; for FIT3179 Data Visualisation, Monash University,
+    Created by Samuel Herzog for FIT3179 Data Visualisation, Monash University,
     October 2026. Charts built with Vega-Lite.
-    Generative AI (Claude) was used to help set up the code and draft text.
+    Generative AI (Claude) was used to help set up the code, gather data and
+    draft text.
   </p>
 </footer>
 
