@@ -1,0 +1,186 @@
+site,state,dataset,year,rabbits_per_km,counts
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1992,23.5,79
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1993,1.0,47
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1994,6.0,56
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1995,1.0,72
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1996,0.5,104
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1997,1.0,76
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1998,1.0,124
+Gum Creek,SA,SA_FlindersRanges_PIRSA,1999,1.0,200
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2000,1.0,114
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2001,0.0,140
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2002,0.0,90
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2003,0.0,60
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2004,0.0,36
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2005,0.0,27
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2006,0.5,36
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2007,0.5,18
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2008,0.5,54
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2009,0.5,18
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2010,1.0,34
+Gum Creek,SA,SA_FlindersRanges_PIRSA,2011,1.0,17
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1989,10.63,4
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1990,14.97,5
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1991,4.55,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1992,3.96,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1993,8.42,7
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1994,10.84,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1995,4.09,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1996,0.61,7
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1997,0.14,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1998,0.24,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,1999,0.48,4
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,2000,0.57,6
+Roxby Downs mine,SA,SA_RoxbyDowns_Spot,2015,1.66,5
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1989,0.75,4
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1990,0.42,5
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1991,0.3,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1992,0.71,5
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1993,0.66,7
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1994,0.77,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1995,1.77,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1996,0.13,7
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1997,0.08,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1998,0.2,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,1999,0.2,4
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,2000,0.47,6
+Roxby Downs town,SA,SA_RoxbyDowns_Spot,2015,0.62,4
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1989,3.27,4
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1990,3.5,5
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1991,2.6,6
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1992,5.57,5
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1993,5.18,7
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1994,3.82,6
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1995,4.37,6
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1996,0.18,7
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1997,0.14,5
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1998,0.2,6
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,1999,0.23,4
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,2000,0.5,6
+Roxby Downs outskirts,SA,SA_RoxbyDowns_Spot,2015,0.73,4
+Border,SA,VIC_HistoSpotlight_8004,1990,3.05,2
+Border,SA,VIC_HistoSpotlight_8004,1991,1.6,3
+Border,SA,VIC_HistoSpotlight_8004,1992,1.0,1
+Border,SA,VIC_HistoSpotlight_8004,1993,1.7,1
+Border,SA,VIC_HistoSpotlight_8004,1994,2.4,2
+Border,SA,VIC_HistoSpotlight_8004,1995,1.7,2
+Border,SA,VIC_HistoSpotlight_8004,1996,1.2,2
+Border,SA,VIC_HistoSpotlight_8004,1997,0.25,4
+Border,SA,VIC_HistoSpotlight_8004,1998,0.4,4
+Border,SA,VIC_HistoSpotlight_8004,1999,0.1,3
+Border,SA,VIC_HistoSpotlight_8004,2000,0.4,4
+Border,SA,VIC_HistoSpotlight_8004,2001,0.3,5
+Border,SA,VIC_HistoSpotlight_8004,2002,0.4,3
+Border,SA,VIC_HistoSpotlight_8004,2003,0.4,5
+Border,SA,VIC_HistoSpotlight_8004,2004,0.6,5
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1991,1.3,3
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1992,0.7,3
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1993,1.6,3
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1994,1.0,1
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1995,0.8,2
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1996,0.4,2
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1997,0.2,4
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1998,0.1,4
+Heitmanns,VIC,VIC_HistoSpotlight_8004,1999,0.2,3
+Heitmanns,VIC,VIC_HistoSpotlight_8004,2000,0.35,4
+Heitmanns,VIC,VIC_HistoSpotlight_8004,2001,0.0,5
+Heitmanns,VIC,VIC_HistoSpotlight_8004,2002,0.2,3
+Heitmanns,VIC,VIC_HistoSpotlight_8004,2003,0.2,6
+Heitmanns,VIC,VIC_HistoSpotlight_8004,2004,0.2,6
+North of Highway,VIC,VIC_HistoSpotlight_8004,1990,6.3,1
+North of Highway,VIC,VIC_HistoSpotlight_8004,1991,18.31,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,1992,3.07,2
+North of Highway,VIC,VIC_HistoSpotlight_8004,1993,3.83,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,1994,4.56,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,1995,4.07,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,1996,0.76,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,1997,0.22,4
+North of Highway,VIC,VIC_HistoSpotlight_8004,1998,0.09,4
+North of Highway,VIC,VIC_HistoSpotlight_8004,1999,0.33,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,2000,0.28,4
+North of Highway,VIC,VIC_HistoSpotlight_8004,2001,0.04,5
+North of Highway,VIC,VIC_HistoSpotlight_8004,2002,0.15,3
+North of Highway,VIC,VIC_HistoSpotlight_8004,2003,0.15,5
+North of Highway,VIC,VIC_HistoSpotlight_8004,2004,0.12,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1983,7.85,2
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1984,9.1,3
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1985,7.75,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1986,7.2,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1987,7.2,2
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1995,3.3,2
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1996,0.96,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1997,0.43,5
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1998,1.14,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,1999,1.22,4
+Rainbow Hindmarsh,VIC,VIC_HistoSpotlight_8004,2000,2.35,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1990,1.95,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1991,1.7,3
+Taparoo,VIC,VIC_HistoSpotlight_8004,1992,6.7,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1993,2.5,3
+Taparoo,VIC,VIC_HistoSpotlight_8004,1994,3.35,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1995,1.75,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1996,1.95,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,1997,0.25,4
+Taparoo,VIC,VIC_HistoSpotlight_8004,1998,0.2,4
+Taparoo,VIC,VIC_HistoSpotlight_8004,1999,0.1,3
+Taparoo,VIC,VIC_HistoSpotlight_8004,2000,0.2,4
+Taparoo,VIC,VIC_HistoSpotlight_8004,2001,0.1,5
+Taparoo,VIC,VIC_HistoSpotlight_8004,2002,0.2,2
+Taparoo,VIC,VIC_HistoSpotlight_8004,2003,0.05,6
+Taparoo,VIC,VIC_HistoSpotlight_8004,2004,0.1,5
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1993,5.7,3
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1994,30.7,1
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1995,4.4,3
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1996,0.7,2
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1997,0.6,4
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1998,0.75,4
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,1999,0.5,3
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,2000,0.59,4
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,2001,1.32,5
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,2002,1.45,3
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,2003,0.18,5
+Tower Paddock,VIC,VIC_HistoSpotlight_8004,2004,0.11,2
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1993,0.71,7
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1994,3.2,19
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1995,1.39,18
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1996,0.34,15
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1997,0.2,47
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1998,0.29,29
+Hattah Kulkyne,VIC,VIC_ParksVictoria,1999,0.23,15
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2000,0.17,34
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2002,0.51,22
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2003,0.55,22
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2004,1.0,41
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2005,2.0,39
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2006,2.72,40
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2007,2.76,40
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2008,3.0,43
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2009,1.68,24
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2010,1.5,15
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2011,0.61,17
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2012,1.0,17
+Hattah Kulkyne,VIC,VIC_ParksVictoria,2013,0.9,18
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1990,2.37,5
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1991,2.46,12
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1992,3.14,7
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1993,2.02,12
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1994,3.43,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1995,2.56,12
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1996,0.7,11
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1997,0.22,20
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1998,0.29,20
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,1999,0.35,20
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2000,0.33,15
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2001,0.19,20
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2002,0.3,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2003,0.24,20
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2004,0.27,15
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2005,0.12,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2006,0.21,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2007,0.2,15
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2008,0.16,15
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2009,0.2,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2010,0.29,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2011,0.1,9
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2012,0.18,10
+Millewa (Murray-Sunset),VIC,VIC_ParksVictoria,2013,0.09,10

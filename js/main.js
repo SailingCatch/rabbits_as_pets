@@ -127,6 +127,49 @@ async function fitToWidth(specPath, container) {
   return spec;
 }
 
+// A Play button for charts with a time slider (see "play" in js/charts.js).
+// It moves the slider's parameter smoothly from start to end; the slider
+// handle follows along, and pressing again pauses.
+function addPlayButton(view, container, play) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "play-button";
+  button.textContent = "▶ Play";
+
+  let frame = null;
+  let startTime = null;
+  let startValue = null;
+
+  function stop() {
+    cancelAnimationFrame(frame);
+    frame = null;
+    button.textContent = "▶ Play";
+  }
+
+  function step(now) {
+    if (startTime === null) startTime = now;
+    const progress = (now - startTime) / (play.seconds * 1000);
+    const value = Math.min(startValue + progress * (play.to - play.from), play.to);
+    view.signal(play.param, value).runAsync();
+    if (value >= play.to) stop();
+    else frame = requestAnimationFrame(step);
+  }
+
+  button.addEventListener("click", () => {
+    if (frame !== null) return stop();
+    // Start from where the slider is, or from the beginning if it's at the end
+    const current = view.signal(play.param);
+    startValue = current >= play.to ? play.from : current;
+    startTime = null;
+    button.textContent = "❚❚ Pause";
+    frame = requestAnimationFrame(step);
+  });
+
+  // Put the button next to the slider Vega draws under the chart
+  const bindings = container.querySelector(".vega-bindings") || container;
+  bindings.prepend(button);
+}
+
 // Replace the chart's <div> contents with a short dashed-border note.
 function showNote(container, html) {
   container.innerHTML = `<div class="chart__note">${html}</div>`;
@@ -161,11 +204,12 @@ async function drawChart(chart) {
 
   try {
     const spec = chart.fitWidth ? await fitToWidth(chart.spec, container) : chart.spec;
-    await vegaEmbed(container, spec, {
+    const result = await vegaEmbed(container, spec, {
       config: THEME,
       actions: false,                       // hide the "..." export menu
       renderer: chart.renderer || "svg",    // canvas is faster for many points
     });
+    if (chart.play) addPlayButton(result.view, container, chart.play);
   } catch (error) {
     console.error(`Could not draw ${chart.id}`, error);
     showNote(container, `Could not draw this chart: ${error.message}`);

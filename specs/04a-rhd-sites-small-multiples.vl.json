@@ -1,0 +1,186 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 4a, small-multiple line charts. Wild rabbits counted per km of night-time spotlight survey at the 12 sites in the Australian National Rabbit Database with long runs of counts on both sides of 1995, when calicivirus (RHD) arrived. Each panel has its own scale, so read each site against itself: the shape matters, not the height. Sites were picked by a fixed rule (see scripts/prepare_anrd.py), not by hand. Lines are straight between counts (no smoothing), and dots mark the years actually counted, so long gaps in a record show as long straight lines.",
+  "data": {
+    "url": "data/anrd/rhd-sites.csv",
+    "format": {
+      "parse": {
+        "year": "number",
+        "rabbits_per_km": "number",
+        "counts": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "datum.site + ' (' + datum.state + ')'",
+      "as": "panel"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "mean",
+          "field": "rabbits_per_km",
+          "as": "site_mean"
+        }
+      ],
+      "groupby": [
+        "panel"
+      ]
+    }
+  ],
+  "facet": {
+    "field": "panel",
+    "type": "nominal",
+    "sort": {
+      "field": "site_mean",
+      "op": "max",
+      "order": "descending"
+    },
+    "header": {
+      "title": null,
+      "labelAnchor": "start",
+      "labelFontSize": 13,
+      "labelFontWeight": 600,
+      "labelPadding": 4,
+      "labelLimit": 0
+    }
+  },
+  "columns": 4,
+  "spacing": {
+    "column": 26,
+    "row": 22
+  },
+  "spec": {
+    "width": 230,
+    "height": 120,
+    "layer": [
+      {
+        "description": "Shaded from 1995 on: the years after calicivirus arrived.",
+        "data": {
+          "values": [
+            {}
+          ]
+        },
+        "mark": {
+          "type": "rect",
+          "color": "#e3e8e1",
+          "opacity": 1
+        },
+        "encoding": {
+          "x": {
+            "datum": 1995,
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                1983,
+                2015
+              ],
+              "nice": false,
+              "zero": false
+            }
+          },
+          "x2": {
+            "datum": 2015
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "area",
+          "color": "#c0662b",
+          "opacity": 0.18,
+          "interpolate": "linear"
+        },
+        "encoding": {
+          "x": {
+            "field": "year",
+            "type": "quantitative"
+          },
+          "y": {
+            "field": "rabbits_per_km",
+            "type": "quantitative"
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "line",
+          "color": "#c0662b",
+          "strokeWidth": 2,
+          "interpolate": "linear",
+          "point": {
+            "size": 14,
+            "filled": true,
+            "color": "#c0662b"
+          }
+        },
+        "encoding": {
+          "x": {
+            "field": "year",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                1983,
+                2015
+              ],
+              "nice": false,
+              "zero": false
+            },
+            "axis": {
+              "title": null,
+              "format": "d",
+              "values": [
+                1985,
+                1995,
+                2005,
+                2015
+              ],
+              "grid": false
+            }
+          },
+          "y": {
+            "field": "rabbits_per_km",
+            "type": "quantitative",
+            "scale": {
+              "zero": true,
+              "nice": true
+            },
+            "axis": {
+              "title": null,
+              "tickCount": 3,
+              "format": ".2~r"
+            }
+          },
+          "tooltip": [
+            {
+              "field": "panel",
+              "title": "Site"
+            },
+            {
+              "field": "year",
+              "title": "Year"
+            },
+            {
+              "field": "rabbits_per_km",
+              "title": "Rabbits per km",
+              "format": ".1f"
+            },
+            {
+              "field": "counts",
+              "title": "Counts that year"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "resolve": {
+    "scale": {
+      "y": "independent"
+    },
+    "axis": {
+      "y": "independent"
+    }
+  }
+}

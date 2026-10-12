@@ -14,6 +14,8 @@
                which draws much faster than the default "svg"
      fitWidth  optional: true for stacked charts (vconcat) that should be
                stretched to the column width (see fitToWidth in main.js)
+     play      optional: adds a Play button that moves a slider parameter
+               smoothly, e.g. { param: "t", from: 2010, to: 2025, seconds: 15 }
    ========================================================================== */
 
 const CHARTS = [
@@ -58,14 +60,22 @@ const CHARTS = [
     needs: ["data/ramsey/rhdv2-site-abundance.csv"],
     idiom: "Dumbbell chart (before → after)",
   },
+  {
+    id: "chart-04a",
+    spec: "specs/04a-rhd-sites-small-multiples.vl.json",
+    needs: ["data/anrd/rhd-sites.csv"],
+    idiom: "Small-multiple line charts",
+  },
 
   // 04 Still everywhere
   {
     id: "chart-05",
     spec: "specs/05-sightings-by-year-map.vl.json",
     needs: ["data/geo/australia-states.topojson", "data/ala/sightings-grid-by-year.csv"],
-    idiom: "Map: gridded proportional symbols, linked to a clickable year bar chart",
+    idiom: "Map: gridded proportional symbols with a smooth time slider, plus yearly bar chart",
     fitWidth: true,
+    renderer: "canvas",                     // redraws faster while playing
+    play: { param: "t", from: 2010, to: 2025, seconds: 15 },
   },
   {
     id: "chart-06",

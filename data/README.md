@@ -29,6 +29,7 @@ ready-to-use files are committed (about 360 KB in total).
 | `history/timeline.csv` | typed in from CSIRO, PestSmart, DPIRD | 2 |
 | `geo/rabbit-proof-fences.geojson` | `scripts/build_fences.sh` | 3 |
 | `ramsey/rhdv2-site-abundance.csv` | typed in from the paper | 4 |
+| `anrd/rhd-sites.csv` | `scripts/prepare_anrd.py` | 4a |
 
 All files join on one column, **`state`**: the short codes `NSW`, `VIC`,
 `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT`.
@@ -251,4 +252,39 @@ CC BY 3.0 AU. Run `scripts/build_fences.sh`; it downloads the three lines
 from the WA Government's public map service (no login) and simplifies them
 into `geo/rabbit-proof-fences.geojson` (about 10 KB, property `fence`).
 The source describes the lines as indicative historic locations.
+
+---
+
+## 10. Long-term rabbit counts (Australian National Rabbit Database)
+
+**Source:** Roy-Dufresne, E. et al. (2019). The Australian National Rabbit
+Database: 50 yr of population monitoring of an invasive species. *Ecology*
+100(7): e02750. <https://doi.org/10.1002/ecy.2750>. The paper states: "No
+copyright or proprietary restrictions are associated with the use of this
+data set other than citation of this Data Paper."
+
+1. Download the paper's supporting file **ecy2750-sup-0001-DataS1.zip**
+   (Wiley blocks scripts, so use a browser) into `data/raw/anrd/`.
+2. Run:
+
+   ```bash
+   python3 scripts/prepare_anrd.py data/raw/anrd/ecy2750-sup-0001-datas1.zip
+   ```
+
+The abundance file has 51,241 night-time spotlight counts from 524 sites,
+1965–2015. The script keeps the sites that meet a fixed rule, so the choice
+can be explained and repeated: counted in at least 10 years, starting in or
+before 1994 and running to 1997 or later, outside Tasmania (whose transects
+are possum surveys that almost never record a rabbit). Twelve sites qualify.
+
+**Columns:** `site`, `state`, `dataset`, `year`, `rabbits_per_km` (median of
+that year's counts), `counts` (how many counts the median is from).
+
+**Not used, but worth knowing:** the occurrence file holds about 100
+historic release records (`AUS_HistRelease`, 1825–1925; locations only
+accurate to about 15 km, and some state labels are wrong) and 994 dated
+records of calicivirus spreading across Australia in 1995–1999
+(`AUS_RHDV1Spread`). Don't use the occurrence file to extend the sightings
+map back in time: before 1990 it is mostly museum specimens, and the 2000s
+are dominated by one warren survey on Yorke Peninsula (about 500,000 records).
 

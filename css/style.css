@@ -403,6 +403,41 @@ p {
   margin-right: 0.6rem;
 }
 
+/* Play button for time sliders, sitting before the slider */
+.play-button {
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.play-button:hover {
+  background: var(--pest);
+}
+
+.vega-bindings:has(.play-button) {
+  display: flex;
+  align-items: center;
+}
+
+/* Make the time slider long enough to drag smoothly */
+.vega-bind input[type="range"] {
+  width: min(28rem, 60vw);
+  accent-color: var(--pest);
+}
+
+/* Vega prints the slider's raw value (e.g. 2017.15) after it; the chart
+   already shows the year in large type, so hide the number */
+.vega-bind input[type="range"] + span {
+  display: none;
+}
+
 /* Vega tooltips: match the page fonts */
 #vg-tooltip-element {
   font-family: var(--font-display);

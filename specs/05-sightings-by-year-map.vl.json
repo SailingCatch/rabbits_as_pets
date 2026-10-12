@@ -1,345 +1,157 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 5, linked year picker and map. The bars show wild rabbit sightings reported each year; clicking a bar redraws the map below for that year. Each circle is a 1-degree square (about 100 km across) sized by its sightings, on one fixed scale so years can be compared.",
+  "description": "Chart 5, proportional-symbol map with a smooth time slider, and a bar chart of yearly totals underneath. The slider moves in steps of 0.05 of a year; in between whole years the map blends the two (at 2017.3, each circle is 70% its 2017 size and 30% its 2018 size), so dragging or pressing Play morphs the map smoothly instead of jumping between pictures. Each circle is a 1-degree square (about 100 km across) sized by its sightings, on one fixed scale so years can be compared. The marker on the bars shows where the slider is.",
+
   "data": {
     "url": "data/ala/sightings-grid-by-year.csv",
-    "format": {
-      "parse": {
-        "year": "number",
-        "lon": "number",
-        "lat": "number",
-        "count": "number"
-      }
-    }
+    "format": {"parse": {"year": "number", "lon": "number", "lat": "number", "count": "number"}}
   },
-  "spacing": 8,
+
+  "params": [
+    {
+      "name": "t",
+      "value": 2025,
+      "bind": {"input": "range", "min": 2010, "max": 2025, "step": 0.05, "name": "Year "}
+    }
+  ],
+
+  "spacing": 4,
+
   "vconcat": [
     {
-      "description": "Year picker: one bar per year. The picked year is drawn in the pest colour, the rest are faded.",
-      "width": 860,
-      "height": 130,
-      "layer": [
-        {
-          "params": [
-            {
-              "name": "picked",
-              "select": {
-                "type": "point",
-                "fields": [
-                  "year"
-                ],
-                "on": "click",
-                "clear": false
-              },
-              "value": [
-                {
-                  "year": 2025
-                }
-              ]
-            }
-          ],
-          "mark": {
-            "type": "bar",
-            "cornerRadiusTopLeft": 2,
-            "cornerRadiusTopRight": 2,
-            "cursor": "pointer"
-          },
-          "encoding": {
-            "x": {
-              "field": "year",
-              "type": "ordinal",
-              "axis": {
-                "title": null,
-                "labelAngle": 0,
-                "domain": false,
-                "ticks": false
-              }
-            },
-            "y": {
-              "aggregate": "sum",
-              "field": "count",
-              "type": "quantitative",
-              "axis": {
-                "title": "Sightings",
-                "format": "~s",
-                "tickCount": 3,
-                "domain": false,
-                "ticks": false
-              }
-            },
-            "color": {
-              "condition": {
-                "param": "picked",
-                "value": "#c0662b",
-                "empty": false
-              },
-              "value": "#ead2bf"
-            },
-            "tooltip": [
-              {
-                "field": "year",
-                "title": "Year"
-              },
-              {
-                "aggregate": "sum",
-                "field": "count",
-                "title": "Sightings",
-                "format": ","
-              }
-            ]
-          },
-          "description": "Bars, one per year; click one to pick it."
-        },
-        {
-          "description": "Note on the 2019 spike, written on the chart so readers don't misread it as a rabbit boom.",
-          "transform": [
-            {
-              "filter": "datum.year === 2019"
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "count",
-                  "as": "total"
-                }
-              ],
-              "groupby": [
-                "year"
-              ]
-            }
-          ],
-          "mark": {
-            "type": "text",
-            "align": "left",
-            "baseline": "top",
-            "dx": 30,
-            "dy": 2,
-            "fontSize": 12,
-            "color": "#5b6b66",
-            "lineBreak": "\n",
-            "text": "2019: a surge in reports to\nthe FeralScan app, not a boom"
-          },
-          "encoding": {
-            "x": {
-              "field": "year",
-              "type": "ordinal"
-            },
-            "y": {
-              "field": "total",
-              "type": "quantitative"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "description": "Map for the picked year.",
+      "description": "Map for the slider's position.",
       "width": 860,
       "height": 560,
       "projection": {
         "type": "conicEqualArea",
-        "parallels": [
-          -18,
-          -36
-        ],
-        "rotate": [
-          -132,
-          0
-        ],
-        "center": [
-          0,
-          -27
-        ]
+        "parallels": [-18, -36],
+        "rotate": [-132, 0],
+        "center": [0, -27]
       },
       "layer": [
         {
           "description": "Base map: land in a quiet fill so the circles stand out.",
           "data": {
             "url": "data/geo/australia-states.topojson",
-            "format": {
-              "type": "topojson",
-              "feature": "states"
-            }
+            "format": {"type": "topojson", "feature": "states"}
           },
-          "mark": {
-            "type": "geoshape",
-            "fill": "#e3e8e1",
-            "stroke": "#f3f5f1",
-            "strokeWidth": 1.5
-          }
+          "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 1.5}
         },
         {
-          "description": "Grid squares for the picked year. The size scale is fixed (0 to the busiest square of any year), so a circle means the same in every year.",
+          "description": "Blend the two whole years either side of the slider, square by square.",
           "transform": [
-            {
-              "filter": {
-                "param": "picked",
-                "empty": false
-              }
-            }
-          ],
-          "mark": {
-            "type": "circle",
-            "color": "#c0662b",
-            "opacity": 0.7,
-            "stroke": "#f3f5f1",
-            "strokeWidth": 0.5
-          },
-          "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
-            "size": {
-              "field": "count",
-              "type": "quantitative",
-              "scale": {
-                "domain": [
-                  0,
-                  6100
-                ],
-                "range": [
-                  3,
-                  1400
-                ]
-              },
-              "legend": {
-                "title": "Sightings in a 100 km square",
-                "orient": "none",
-                "legendX": 20,
-                "legendY": 400,
-                "direction": "vertical",
-                "values": [
-                  50,
-                  500,
-                  2000,
-                  6000
-                ],
-                "format": ",d",
-                "symbolFillColor": "#c0662b",
-                "symbolOpacity": 0.7,
-                "symbolStrokeColor": "#f3f5f1"
-              }
-            },
-            "tooltip": [
-              {
-                "field": "year",
-                "title": "Year"
-              },
-              {
-                "field": "count",
-                "title": "Sightings",
-                "format": ","
-              },
-              {
-                "field": "lat",
-                "title": "Latitude"
-              },
-              {
-                "field": "lon",
-                "title": "Longitude"
-              }
-            ]
-          }
-        },
-        {
-          "description": "Big year label in the top-left corner (out at sea, north-west of WA), so the reader always knows which year is showing.",
-          "transform": [
-            {
-              "filter": {
-                "param": "picked",
-                "empty": false
-              }
-            },
-            {
-              "aggregate": [
-                {
-                  "op": "sum",
-                  "field": "count",
-                  "as": "total"
-                }
-              ],
-              "groupby": [
-                "year"
-              ]
-            },
-            {
-              "calculate": "toString(datum.year)",
-              "as": "label"
-            },
-            {
-              "calculate": "format(datum.total, ',') + ' sightings'",
-              "as": "sublabel"
-            },
-            {
-              "calculate": "112",
-              "as": "lon"
-            },
-            {
-              "calculate": "-12",
-              "as": "lat"
-            }
+            {"filter": "datum.year === floor(t) || datum.year === floor(t) + 1"},
+            {"calculate": "datum.year === floor(t) ? 1 - (t - floor(t)) : t - floor(t)", "as": "weight"},
+            {"calculate": "datum.count * datum.weight", "as": "blended"},
+            {"aggregate": [{"op": "sum", "field": "blended", "as": "sightings"}], "groupby": ["lon", "lat"]},
+            {"filter": "datum.sightings >= 0.5"}
           ],
           "layer": [
             {
-              "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "bottom",
-                "fontSize": 40,
-                "fontWeight": 700,
-                "color": "#1e2b2a"
-              },
+              "description": "Squares, sized on a fixed scale (0 to the busiest square of any year).",
+              "mark": {"type": "circle", "color": "#c0662b", "opacity": 0.7, "stroke": "#f3f5f1", "strokeWidth": 0.5},
               "encoding": {
-                "longitude": {
-                  "field": "lon",
-                  "type": "quantitative"
+                "longitude": {"field": "lon", "type": "quantitative"},
+                "latitude": {"field": "lat", "type": "quantitative"},
+                "size": {
+                  "field": "sightings",
+                  "type": "quantitative",
+                  "scale": {"domain": [0, 6100], "range": [0, 1400]},
+                  "legend": {
+                    "title": "Sightings in a 100 km square",
+                    "orient": "none",
+                    "legendX": 20,
+                    "legendY": 400,
+                    "direction": "vertical",
+                    "values": [50, 500, 2000, 6000],
+                    "format": ",d",
+                    "symbolFillColor": "#c0662b",
+                    "symbolOpacity": 0.7,
+                    "symbolStrokeColor": "#f3f5f1"
+                  }
                 },
-                "latitude": {
-                  "field": "lat",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "label"
-                }
+                "tooltip": [
+                  {"field": "sightings", "title": "Sightings", "format": ",.0f"},
+                  {"field": "lat", "title": "Latitude"},
+                  {"field": "lon", "title": "Longitude"}
+                ]
               }
             },
             {
-              "mark": {
-                "type": "text",
-                "align": "left",
-                "baseline": "top",
-                "dy": 4,
-                "fontSize": 14,
-                "color": "#5b6b66"
-              },
-              "encoding": {
-                "longitude": {
-                  "field": "lon",
-                  "type": "quantitative"
+              "description": "Big year label and running total in the top-left corner, out at sea.",
+              "transform": [
+                {"aggregate": [{"op": "sum", "field": "sightings", "as": "total"}]},
+                {"calculate": "toString(round(t))", "as": "label"},
+                {"calculate": "format(datum.total, ',.0f') + ' sightings'", "as": "sublabel"},
+                {"calculate": "112", "as": "lon"},
+                {"calculate": "-12", "as": "lat"}
+              ],
+              "layer": [
+                {
+                  "mark": {"type": "text", "align": "left", "baseline": "bottom", "fontSize": 40, "fontWeight": 700, "color": "#1e2b2a"},
+                  "encoding": {
+                    "longitude": {"field": "lon", "type": "quantitative"},
+                    "latitude": {"field": "lat", "type": "quantitative"},
+                    "text": {"field": "label"}
+                  }
                 },
-                "latitude": {
-                  "field": "lat",
-                  "type": "quantitative"
-                },
-                "text": {
-                  "field": "sublabel"
+                {
+                  "mark": {"type": "text", "align": "left", "baseline": "top", "dy": 4, "fontSize": 14, "color": "#5b6b66"},
+                  "encoding": {
+                    "longitude": {"field": "lon", "type": "quantitative"},
+                    "latitude": {"field": "lat", "type": "quantitative"},
+                    "text": {"field": "sublabel"}
+                  }
                 }
-              }
+              ]
             }
           ]
         }
       ]
+    },
+    {
+      "description": "Yearly totals underneath the map. Bars light up as the slider nears their year, and a thin marker follows the slider.",
+      "width": 860,
+      "height": 110,
+      "transform": [
+        {"aggregate": [{"op": "sum", "field": "count", "as": "total"}], "groupby": ["year"]},
+        {"calculate": "datum.year - 0.42", "as": "x0"},
+        {"calculate": "datum.year + 0.42", "as": "x1"}
+      ],
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "scale": {"domain": [2009.5, 2025.5], "nice": false},
+          "axis": {"title": null, "format": "d", "values": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "grid": false, "labelFlush": false}
+        }
+      },
+      "layer": [
+        {
+          "mark": {"type": "rect", "cornerRadiusTopLeft": 2, "cornerRadiusTopRight": 2, "color": "#c0662b"},
+          "encoding": {
+            "x2": {"field": "x1"},
+            "y": {"field": "total", "type": "quantitative", "axis": {"title": "Sightings", "format": "~s", "tickCount": 3}},
+            "opacity": {"value": 1, "condition": {"test": "abs(datum.year - t) > 0.5", "value": 0.25}},
+            "tooltip": [
+              {"field": "year", "title": "Year"},
+              {"field": "total", "title": "Sightings", "format": ","}
+            ]
+          }
+        },
+        {
+          "description": "Slider marker.",
+          "mark": {"type": "rule", "color": "#1e2b2a", "strokeWidth": 1.5},
+          "encoding": {"x": {"datum": {"expr": "t"}, "type": "quantitative"}}
+        },
+        {
+          "description": "Note on the 2019 spike, so readers don't misread it as a rabbit boom.",
+          "transform": [{"filter": "datum.year === 2019"}],
+          "mark": {"type": "text", "align": "left", "baseline": "top", "dx": 22, "dy": 2, "fontSize": 12, "color": "#5b6b66", "lineBreak": "\n",
+                   "text": "2019: a surge in reports to\nthe FeralScan app, not a boom"},
+          "encoding": {"y": {"field": "total", "type": "quantitative"}}
+        }
+      ]
     }
-  ],
-  "resolve": {
-    "legend": {
-      "size": "independent"
-    }
-  }
+  ]
 }
