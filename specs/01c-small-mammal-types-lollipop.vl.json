@@ -1,0 +1,51 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 1c, lollipop chart. Of Australian households that keep small mammals, the share with each kind. Rabbits come first. Households can keep more than one kind, so the shares add to more than 100%.",
+
+  "data": {"url": "data/ama/pets-in-australia-2025.csv"},
+
+  "transform": [
+    {"filter": "datum.breakdown === 'small_mammal_type'"},
+    {"calculate": "toNumber(datum.value) / 100", "as": "share"},
+    {"calculate": "datum.category === 'Rabbits'", "as": "is_rabbit"}
+  ],
+
+  "width": "container",
+  "height": {"step": 40},
+
+  "encoding": {
+    "y": {
+      "field": "category",
+      "type": "nominal",
+      "sort": "-x",
+      "axis": {"title": null, "labelFontSize": 13, "labelColor": "#1e2b2a"}
+    },
+    "x": {
+      "field": "share",
+      "type": "quantitative",
+      "scale": {"domain": [0, 0.6]},
+      "axis": {"title": null, "format": ".0%", "values": [0, 0.2, 0.4, 0.6], "orient": "top"}
+    },
+    "color": {
+      "condition": {"test": "datum.is_rabbit", "value": "#4a64b0"},
+      "value": "#9aa9c9"
+    }
+  },
+
+  "layer": [
+    {"mark": {"type": "rule", "strokeWidth": 3}, "encoding": {"x": {"datum": 0}, "x2": {"field": "share"}}},
+    {
+      "mark": {"type": "circle", "size": 160, "opacity": 1},
+      "encoding": {
+        "tooltip": [
+          {"field": "category", "title": "Pet"},
+          {"field": "share", "title": "Of small-mammal homes", "format": ".0%"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "align": "left", "dx": 12, "fontSize": 13, "fontWeight": 700},
+      "encoding": {"text": {"field": "share", "format": ".0%"}, "color": {"value": "#1e2b2a"}}
+    }
+  ]
+}

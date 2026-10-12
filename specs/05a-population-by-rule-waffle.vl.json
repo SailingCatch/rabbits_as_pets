@@ -1,0 +1,54 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 5a, waffle chart. 100 squares stand for Australia's 27.9 million people (ABS, March 2026), coloured by the pet-rabbit rule where they live. About 1 in 5 Australians live in Queensland, where keeping a pet rabbit is illegal.",
+
+  "data": {
+    "url": "data/abs/population-by-state.csv",
+    "format": {"parse": {"population": "number"}}
+  },
+
+  "transform": [
+    {
+      "lookup": "state",
+      "from": {"data": {"url": "data/legal/rabbit-legal-status.csv"}, "key": "state", "fields": ["status"]}
+    },
+    {"aggregate": [{"op": "sum", "field": "population", "as": "people"}], "groupby": ["status"]},
+    {"calculate": "indexof(['Allowed', 'Allowed with extra rules', 'Banned'], datum.status)", "as": "order"},
+    {"joinaggregate": [{"op": "sum", "field": "people", "as": "total"}]},
+    {"window": [{"op": "sum", "field": "people", "as": "running"}], "sort": [{"field": "order"}], "frame": [null, 0]},
+    {"calculate": "(datum.running - datum.people) / datum.total * 100", "as": "start"},
+    {"calculate": "datum.running / datum.total * 100", "as": "end"},
+    {"calculate": "datum.people / datum.total", "as": "share"},
+    {
+      "description": "Share the 100 squares out from each group's rounded start to its rounded end.",
+      "calculate": "sequence(round(datum.start), round(datum.end))", "as": "square"
+    },
+    {"flatten": ["square"]},
+    {"calculate": "datum.square % 20", "as": "col"},
+    {"calculate": "floor(datum.square / 20)", "as": "row"}
+  ],
+
+  "width": {"step": 30},
+  "height": {"step": 30},
+
+  "mark": {"type": "square", "size": 640, "opacity": 1, "cornerRadius": 2},
+
+  "encoding": {
+    "x": {"field": "col", "type": "ordinal", "axis": null},
+    "y": {"field": "row", "type": "ordinal", "axis": null},
+    "color": {
+      "field": "status",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Allowed", "Allowed with extra rules", "Banned"],
+        "range": ["#4a64b0", "#97a8d8", "#c0662b"]
+      },
+      "legend": {"title": "Each square is 1% of Australians", "orient": "right", "direction": "vertical", "labelFontSize": 13, "symbolSize": 160, "symbolType": "square"}
+    },
+    "tooltip": [
+      {"field": "status", "title": "Pet rabbits"},
+      {"field": "people", "title": "People", "format": ","},
+      {"field": "share", "title": "Share of Australians", "format": ".1%"}
+    ]
+  }
+}

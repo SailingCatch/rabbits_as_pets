@@ -19,7 +19,15 @@
    ========================================================================== */
 
 const CHARTS = [
+  // ---- Part one: the pet ----
+
   // 01 A nation of pet lovers
+  {
+    id: "chart-01a",
+    spec: "specs/01a-pet-boom-line.vl.json",
+    needs: ["data/ama/pets-in-australia-2025.csv"],
+    idiom: "Annotated line chart",
+  },
   {
     id: "chart-01",
     spec: "specs/01-pet-ownership-waffle.vl.json",
@@ -32,6 +40,14 @@ const CHARTS = [
     needs: [],
     idiom: "Pictogram (Isotype)",
   },
+  {
+    id: "chart-01c",
+    spec: "specs/01c-small-mammal-types-lollipop.vl.json",
+    needs: ["data/ama/pets-in-australia-2025.csv"],
+    idiom: "Lollipop chart",
+  },
+
+  // ---- Part two: the pest ----
 
   // 02 From a few rabbits to 600 million
   {
@@ -98,7 +114,15 @@ const CHARTS = [
     idiom: "Map: choropleth (log colour scale)",
   },
 
-  // 05 The rules, and the risks
+  // ---- Part three: back to the pet ----
+
+  // 05 The rules
+  {
+    id: "chart-05a",
+    spec: "specs/05a-population-by-rule-waffle.vl.json",
+    needs: ["data/abs/population-by-state.csv", "data/legal/rabbit-legal-status.csv"],
+    idiom: "Waffle chart",
+  },
   {
     id: "chart-08",
     // Alternative: specs/08-legal-status-choropleth.vl.json (real state
@@ -107,6 +131,7 @@ const CHARTS = [
     needs: ["data/legal/rabbit-legal-status.csv"],
     idiom: "Map: hexagon tile map",
   },
+  // 06 The risk at home
   {
     id: "chart-09",
     spec: "specs/09-virus-samples-waffle.vl.json",
@@ -114,7 +139,7 @@ const CHARTS = [
     idiom: "Waffle chart",
   },
 
-  // 06 When it doesn't work out
+  // 07 When it goes wrong
   {
     id: "chart-10",
     spec: "specs/10-rspca-proportional-symbols.vl.json",
@@ -131,5 +156,13 @@ const CHARTS = [
     spec: "specs/11-rspca-outcomes-marimekko.vl.json",
     needs: ["data/rspca/other-animals-by-state.csv"],
     idiom: "Marimekko (mosaic) chart",
+  },
+
+  // 08 Why we love them
+  {
+    id: "chart-08a",
+    spec: "specs/08a-small-pet-reasons-dotplot.vl.json",
+    needs: ["data/ama/pets-in-australia-2025.csv"],
+    idiom: "Dot plot with change arrow",
   },
 ];

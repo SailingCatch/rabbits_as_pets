@@ -58,38 +58,51 @@
     <li><a href="#history">02 A plague</a></li>
     <li><a href="#viruses">03 The virus war</a></li>
     <li><a href="#today">04 Still everywhere</a></li>
-    <li><a href="#rules">05 Rules and risks</a></li>
-    <li><a href="#shelters">06 When it goes wrong</a></li>
+    <li><a href="#rules">05 The rules</a></li>
+    <li><a href="#risk">06 The risk at home</a></li>
+    <li><a href="#shelters">07 When it goes wrong</a></li>
+    <li><a href="#love">08 Why we love them</a></li>
     <li><a href="#sources">Sources</a></li>
   </ol>
 </nav>
 
 <main>
 
+  <!-- Part dividers mark the three layers of the story:
+       the pet (01), the pest (02-04), and back to the pet (05-08) -->
+  <div class="part">
+    <p class="part__number">Part one</p>
+    <p class="part__title">The pet</p>
+  </div>
+
   <!-- ====================================================================
        01 A NATION OF PET LOVERS
        ==================================================================== -->
   <section id="pet-lovers">
     <p class="kicker">01 &middot; A nation of pet lovers</p>
-    <h2>Dogs, cats, fish&hellip; and hardly any rabbits</h2>
+    <h2>We love pets more than ever</h2>
     <p>
-      Nearly three in four Australian households now have a pet, more than
-      ever before. Dogs and cats lead the way. Only 3% of households keep
-      small mammals, and about half of those keep
-      <span class="key key--pet">rabbits</span>: roughly 1.5 homes in every
-      100.
+      Nearly three in four Australian households now have a pet, up from six
+      in ten before the COVID-19 pandemic. There are about 31.6 million pets in
+      the country, more than the 27.3 million people.
     </p>
 
-    <figure class="chart">
-      <h3>About 1 in 65 households keeps a rabbit</h3>
-      <p class="chart__subtitle">Each house is one household.</p>
-      <div id="chart-01b" class="chart__canvas"></div>
+    <figure class="chart wide">
+      <h3>Pet ownership jumped during the pandemic and kept rising</h3>
+      <p class="chart__subtitle">Share of Australian households with at least one pet, in each national survey.</p>
+      <div id="chart-01a" class="chart__canvas"></div>
       <figcaption>
-        Worked out from two survey figures: 3% of households own small mammals,
-        and 51% of those keep rabbits. Source: Animal Medicines Australia,
-        <em>Pets in Australia</em> 2025.
+        Survey of 2,450 Australians in 2025, and about 2,000 in each earlier
+        year. Source: Animal Medicines Australia, <em>Pets in Australia</em> 2025.
       </figcaption>
     </figure>
+
+    <h2 class="subhead">Dogs, cats, fish&hellip; and hardly any rabbits</h2>
+    <p>
+      Dogs and cats lead the way. Only 3% of households keep small mammals,
+      and about half of those keep <span class="key key--pet">rabbits</span>:
+      roughly 1.5 homes in every 100.
+    </p>
 
     <figure class="chart wide">
       <h3>Out of every 100 Australian households, how many have&hellip;</h3>
@@ -103,11 +116,40 @@
       </figcaption>
     </figure>
 
+    <div class="wide pair">
+      <figure class="chart">
+        <h3>About 1 in 65 households keeps a rabbit</h3>
+        <p class="chart__subtitle">Each house is one household.</p>
+        <div id="chart-01b" class="chart__canvas"></div>
+        <figcaption>
+          3% of households own small mammals &times; 51% of those keep rabbits
+          &asymp; 1.5 in 100. Source: Animal Medicines Australia, 2025.
+        </figcaption>
+      </figure>
+
+      <figure class="chart">
+        <h3>&hellip;yet rabbits are the favourite small pet</h3>
+        <p class="chart__subtitle">Of households with small mammals, the share keeping each kind.</p>
+        <div id="chart-01c" class="chart__canvas"></div>
+        <figcaption>
+          Households can keep more than one kind. Based on the survey's
+          small-mammal owners, a small group, so treat these as rough.
+          Source: Animal Medicines Australia, 2025.
+        </figcaption>
+      </figure>
+    </div>
+
     <p>
-      Why so few? Part of the answer is how much space and care a rabbit
-      needs. The bigger part is history.
+      So why so few? Part of the answer is how much space and care a rabbit
+      needs. The bigger part is history: in Australia, the rabbit was a pest
+      long before it was a pet.
     </p>
   </section>
+
+  <div class="part">
+    <p class="part__number">Part two</p>
+    <p class="part__title">The pest</p>
+  </div>
 
   <!-- ====================================================================
        02 FROM A FEW RABBITS TO 600 MILLION
@@ -252,16 +294,33 @@
     </div>
   </section>
 
+  <div class="part">
+    <p class="part__number">Part three</p>
+    <p class="part__title">Back to the pet</p>
+  </div>
+
   <!-- ====================================================================
-       05 THE RULES, AND THE RISKS
+       05 THE RULES
        ==================================================================== -->
   <section id="rules">
-    <p class="kicker">05 &middot; Rules and risks</p>
-    <h2>Why owning a rabbit comes with rules</h2>
+    <p class="kicker">05 &middot; The rules</p>
+    <h2>1 in 5 Australians can't legally keep a rabbit</h2>
     <p>
-      Because rabbits are such a costly pest, every state treats them
-      differently from dogs and cats.
+      Because rabbits are such a costly pest, the states treat them differently
+      from dogs and cats. In Queensland, home to about a fifth of all
+      Australians, keeping a pet rabbit is illegal.
     </p>
+
+    <figure class="chart wide">
+      <h3>Where Australians live, by the pet-rabbit rules</h3>
+      <p class="chart__subtitle">100 squares for Australia's 27.9 million people.</p>
+      <div id="chart-05a" class="chart__canvas"></div>
+      <figcaption>
+        Population at March 2026. Sources: Australian Bureau of Statistics,
+        <em>National, state and territory population</em>; each state's
+        government website (see the map below).
+      </figcaption>
+    </figure>
 
     <div class="split split--flip">
       <div class="split__text">
@@ -280,11 +339,18 @@
         <figcaption>Source: each state and territory government's website (linked in the tooltip).</figcaption>
       </figure>
     </div>
+  </section>
 
+  <!-- ====================================================================
+       06 THE RISK AT HOME
+       ==================================================================== -->
+  <section id="risk">
+    <p class="kicker">06 &middot; The risk at home</p>
+    <h2>The viruses meant for wild rabbits reach pets too</h2>
     <p>
-      The viruses released to control wild rabbits kill pet rabbits too, and
-      insects can carry them from wild rabbits to a backyard hutch. Vaccines
-      protect pets against calicivirus, but no myxomatosis vaccine is
+      The viruses released to control wild rabbits kill pet rabbits as well,
+      and insects can carry them from wild rabbits to a backyard hutch.
+      Vaccines protect pets against calicivirus, but no myxomatosis vaccine is
       registered in Australia.
     </p>
 
@@ -300,10 +366,10 @@
   </section>
 
   <!-- ====================================================================
-       06 WHEN IT DOESN'T WORK OUT
+       07 WHEN IT DOESN'T WORK OUT
        ==================================================================== -->
   <section id="shelters">
-    <p class="kicker">06 &middot; When it goes wrong</p>
+    <p class="kicker">07 &middot; When it goes wrong</p>
     <h2>When a small pet ends up in a shelter</h2>
     <p>
       The RSPCA doesn't count rabbits on their own. It groups them with other
@@ -315,8 +381,8 @@
       <div class="split__text">
         <h3>More than 6,000 a year</h3>
         <p>
-          RSPCA shelters took in 6,267 small pets in 2024&ndash;25. Queensland,
-          New South Wales and Victoria received the most.
+          RSPCA shelters took in 6,267 small pets in 2024&ndash;25. New South
+          Wales, Victoria and Queensland received the most.
         </p>
       </div>
       <figure class="chart">
@@ -341,11 +407,51 @@
         too small to compare. Source: RSPCA Australia annual statistics.
       </figcaption>
     </figure>
+  </section>
 
+  <!-- ====================================================================
+       08 WHY WE LOVE THEM (closing)
+       ==================================================================== -->
+  <section id="love">
+    <p class="kicker">08 &middot; Why we love them</p>
+    <h2>Company, calm, and a reason to get up</h2>
     <p>
-      Before getting a rabbit, check your state's rules, plan for vaccination
-      and insect-proof housing, and make sure there's room for it to run.
+      For all the rules and risks, people keep small pets for simple reasons:
+      company, a hobby, a calmer day. Since 2022 far more owners say their
+      small pet helps their mental health.
     </p>
+
+    <div class="split">
+      <div class="split__text">
+        <blockquote class="pullquote">
+          <p>&ldquo;I can have a reassuring cuddle with my ferret and a chat when I feel a bit lonely.&rdquo;</p>
+          <footer>Small mammal owner, Tasmania</footer>
+        </blockquote>
+        <blockquote class="pullquote">
+          <p>&ldquo;They have helped improve my mental health because I'm stuck at home all day.&rdquo;</p>
+          <footer>Bird owner, Queensland</footer>
+        </blockquote>
+      </div>
+      <figure class="chart">
+        <h3>Mental health is now almost as common a reason as company</h3>
+        <p class="chart__subtitle">Why Australians keep small mammals such as rabbits, 2025.</p>
+        <div id="chart-08a" class="chart__canvas"></div>
+        <figcaption>
+          Owners could give more than one reason. Quotes and figures: Animal
+          Medicines Australia, <em>Pets in Australia</em> 2025.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="checklist">
+      <h3>Thinking of getting a rabbit?</h3>
+      <ul>
+        <li><strong>Check your state's rules.</strong> Pet rabbits are illegal in Queensland, and SA and the ACT have extra rules.</li>
+        <li><strong>Vaccinate against calicivirus.</strong> It protects against the virus spread to control wild rabbits.</li>
+        <li><strong>Keep it in escape-proof, insect-proof housing.</strong> There's no myxomatosis vaccine in Australia, so keeping insects out matters.</li>
+        <li><strong>Never let it go.</strong> Released pet rabbits can join the wild population, and releasing them is against the law in states such as NSW and SA.</li>
+      </ul>
+    </div>
   </section>
 
   <!-- ====================================================================
@@ -376,6 +482,12 @@
         molecular epidemiology and citizen science for the surveillance of
         lagoviruses in Australia. <em>Viruses</em> 15(12):2348.
         <a href="https://doi.org/10.3390/v15122348">doi:10.3390/v15122348</a>
+      </li>
+      <li>
+        <strong>Population:</strong> Australian Bureau of Statistics,
+        <em>National, state and territory population</em>, estimated resident
+        population, March quarter 2026, CC BY 4.0.
+        <a href="https://www.abs.gov.au/statistics/people/population/national-state-and-territory-population">abs.gov.au</a>
       </li>
       <li>
         <strong>Long-term rabbit counts:</strong> Roy-Dufresne, E. et al.

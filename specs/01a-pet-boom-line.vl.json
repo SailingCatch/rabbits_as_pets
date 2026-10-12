@@ -1,0 +1,65 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 1a, annotated line chart. Share of Australian households with at least one pet in each Animal Medicines Australia survey, 2016-2025. The axis starts at zero so the rise isn't exaggerated; the COVID-19 years are shaded because the survey report links the jump to them.",
+
+  "data": {"url": "data/ama/pets-in-australia-2025.csv"},
+
+  "transform": [
+    {"filter": "datum.breakdown === 'households_with_pet'"},
+    {"calculate": "toNumber(datum.year)", "as": "year"},
+    {"calculate": "toNumber(datum.value) / 100", "as": "share"}
+  ],
+
+  "width": "container",
+  "height": 240,
+
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "scale": {"domain": [2015, 2026], "nice": false},
+      "axis": {"title": null, "format": "d", "values": [2016, 2019, 2022, 2025], "grid": false}
+    }
+  },
+
+  "layer": [
+    {
+      "description": "COVID-19 years, lightly shaded.",
+      "data": {"values": [{"start": 2020, "end": 2022}]},
+      "layer": [
+        {
+          "mark": {"type": "rect", "color": "#e3e8e1"},
+          "encoding": {"x": {"field": "start", "type": "quantitative"}, "x2": {"field": "end"}}
+        },
+        {
+          "mark": {"type": "text", "align": "left", "baseline": "top", "dx": 6, "dy": 6, "fontSize": 12, "color": "#5b6b66", "text": "COVID-19"},
+          "encoding": {"x": {"field": "start", "type": "quantitative"}, "y": {"datum": 1, "type": "quantitative"}}
+        }
+      ]
+    },
+    {
+      "mark": {"type": "area", "color": "#4a64b0", "opacity": 0.12},
+      "encoding": {
+        "y": {"field": "share", "type": "quantitative", "scale": {"domain": [0, 1]}, "axis": {"title": null, "format": ".0%", "values": [0, 0.25, 0.5, 0.75, 1]}}
+      }
+    },
+    {
+      "mark": {"type": "line", "color": "#4a64b0", "strokeWidth": 2.5, "point": {"size": 70, "filled": true, "color": "#4a64b0", "stroke": "#f3f5f1", "strokeWidth": 2}},
+      "encoding": {
+        "y": {"field": "share", "type": "quantitative"},
+        "tooltip": [
+          {"field": "year", "title": "Survey year"},
+          {"field": "share", "title": "Households with a pet", "format": ".0%"}
+        ]
+      }
+    },
+    {
+      "description": "Value above each point.",
+      "mark": {"type": "text", "baseline": "bottom", "dy": -10, "fontSize": 13, "fontWeight": 700, "color": "#1e2b2a"},
+      "encoding": {
+        "y": {"field": "share", "type": "quantitative"},
+        "text": {"field": "share", "format": ".0%"}
+      }
+    }
+  ]
+}

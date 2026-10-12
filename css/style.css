@@ -232,6 +232,93 @@ p {
 .key--neutral::before { background: var(--neutral); }
 
 
+/* Part dividers: a full-width band marking the three layers of the story
+   (the pet, the pest, back to the pet). The pest band uses the pest colour
+   so the middle of the story reads differently at a glance.               */
+.part {
+  padding: 3.5rem var(--gutter) 3rem;
+  background: var(--paper-deep);
+  border-top: 1px solid var(--rule);
+  text-align: left;
+}
+
+.part > * {
+  width: min(100%, var(--wide));
+  margin-inline: auto;
+}
+
+.part__number {
+  margin-bottom: 0.25rem;
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.part__title {
+  margin-block: 0;          /* keep the auto side margins that centre it */
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--pet);
+}
+
+/* The middle layer is the pest */
+#pet-lovers + .part .part__title {
+  color: var(--pest);
+}
+
+/* A second heading inside a section */
+h2.subhead {
+  margin-top: 3.5rem;
+  font-size: 1.6rem;
+}
+
+/* Owner quotes, set large in the reading face */
+.pullquote {
+  margin: 0 0 2rem;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--pet);
+}
+
+.pullquote p {
+  margin-bottom: 0.4rem;
+  font-size: 1.25rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.pullquote footer {
+  font-family: var(--font-display);
+  font-size: var(--size-small);
+  color: var(--ink-muted);
+}
+
+/* Closing "before you get a rabbit" box */
+.checklist {
+  margin-top: 3rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--paper-deep);
+  border-radius: 6px;
+}
+
+.checklist ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.checklist li {
+  margin-bottom: 0.6rem;
+}
+
+.checklist li::marker {
+  color: var(--pet);
+}
+
 /* Hero ---------------------------------------------------------------------- */
 .hero {
   padding-block: 6rem 3rem;

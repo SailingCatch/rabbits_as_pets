@@ -30,6 +30,7 @@ ready-to-use files are committed (about 360 KB in total).
 | `geo/rabbit-proof-fences.geojson` | `scripts/build_fences.sh` | 3 |
 | `ramsey/rhdv2-site-abundance.csv` | typed in from the paper | 4 |
 | `anrd/rhd-sites.csv` | `scripts/prepare_anrd.py` | 4a |
+| `abs/population-by-state.csv` | `scripts/fetch_abs_population.py` | 5a |
 
 All files join on one column, **`state`**: the short codes `NSW`, `VIC`,
 `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT`.
@@ -287,4 +288,21 @@ records of calicivirus spreading across Australia in 1995–1999
 (`AUS_RHDV1Spread`). Don't use the occurrence file to extend the sightings
 map back in time: before 1990 it is mostly museum specimens, and the 2000s
 are dominated by one warren survey on Yorke Peninsula (about 500,000 records).
+
+---
+
+## 11. Population by state (ABS)
+
+**Source:** Australian Bureau of Statistics, *National, state and territory
+population*, estimated resident population (dataflow `ERP_Q`), via the ABS
+Data API. Licence: CC BY 4.0.
+
+```bash
+python3 scripts/fetch_abs_population.py
+```
+
+One request, no login. Writes `abs/population-by-state.csv` with columns
+`state`, `population`, `quarter` for the latest quarter published (2026-Q1
+when last run: 27,916,103 people; Queensland 20.6%). Used to show what share
+of Australians live under each pet-rabbit rule.
 
