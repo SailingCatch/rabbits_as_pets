@@ -1,0 +1,95 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 11, Marimekko (mosaic) chart. Each column is one state's RSPCA in 2023-24: its width shows how many small pets ('other animals', which include rabbits) it took in, and the coloured blocks show what happened to them. Columns are sorted by the share found a new home. The NT (17 animals) is left out.",
+
+  "data": {
+    "url": "data/rspca/other-animals-by-state.csv",
+    "format": {"parse": {"received": "number", "reclaimed": "number", "returned": "number", "rehomed": "number", "in_care": "number", "transferred": "number", "euthanased": "number", "other": "number"}}
+  },
+
+  "transform": [
+    {"filter": "datum.financial_year === '2023-24' && datum.received >= 50"},
+    {"calculate": "datum.reclaimed + (datum.returned || 0)", "as": "back_home"},
+    {"calculate": "datum.rehomed / datum.received", "as": "share_rehomed"},
+
+    {"description": "Column widths: each state's running total of animals, in order of share rehomed.",
+     "window": [{"op": "sum", "field": "received", "as": "x_end"}],
+     "sort": [{"field": "share_rehomed", "order": "descending"}],
+     "frame": [null, 0]},
+    {"calculate": "datum.x_end - datum.received", "as": "x_start"},
+    {"calculate": "(datum.x_start + datum.x_end) / 2", "as": "x_mid"},
+
+    {"fold": ["rehomed", "back_home", "transferred", "in_care", "euthanased", "other"], "as": ["outcome_key", "animals"]},
+    {
+      "calculate": "{'rehomed': 'New home', 'back_home': 'Back to owner', 'transferred': 'Transferred', 'in_care': 'Still in care', 'euthanased': 'Euthanased', 'other': 'Other (incl. died)'}[datum.outcome_key]",
+      "as": "outcome"
+    },
+    {
+      "calculate": "indexof(['rehomed', 'back_home', 'transferred', 'in_care', 'euthanased', 'other'], datum.outcome_key)",
+      "as": "outcome_order"
+    },
+    {"calculate": "datum.animals / datum.received", "as": "share"},
+
+    {"description": "Block heights: running share within each state, top to bottom.",
+     "window": [{"op": "sum", "field": "share", "as": "y_end"}],
+     "groupby": ["state"],
+     "sort": [{"field": "outcome_order"}],
+     "frame": [null, 0]},
+    {"calculate": "datum.y_end - datum.share", "as": "y_start"}
+  ],
+
+  "width": "container",
+  "height": 380,
+
+  "layer": [
+    {
+      "mark": {"type": "rect", "stroke": "#f3f5f1", "strokeWidth": 1.5},
+      "encoding": {
+        "x": {"field": "x_start", "type": "quantitative", "axis": null, "scale": {"nice": false}},
+        "x2": {"field": "x_end"},
+        "y": {
+          "field": "y_start", "type": "quantitative",
+          "scale": {"domain": [0, 1], "reverse": true},
+          "axis": {"title": null, "format": ".0%", "values": [0, 0.25, 0.5, 0.75, 1], "grid": false}
+        },
+        "y2": {"field": "y_end"},
+        "color": {
+          "field": "outcome",
+          "type": "nominal",
+          "scale": {
+            "domain": ["New home", "Back to owner", "Transferred", "Still in care", "Euthanased", "Other (incl. died)"],
+            "range": ["#4a64b0", "#00806a", "#b3820f", "#a3aea8", "#a3478f", "#6b8e23"]
+          },
+          "legend": {"title": null, "orient": "top", "direction": "horizontal", "columns": 6}
+        },
+        "tooltip": [
+          {"field": "state", "title": "RSPCA"},
+          {"field": "received", "title": "Small pets received", "format": ","},
+          {"field": "outcome", "title": "Outcome"},
+          {"field": "animals", "title": "Animals", "format": ","},
+          {"field": "share", "title": "Share", "format": ".0%"}
+        ]
+      }
+    },
+    {
+      "description": "State name and number received under each column.",
+      "transform": [{"filter": "datum.outcome_key === 'rehomed'"}],
+      "layer": [
+        {
+          "mark": {"type": "text", "baseline": "top", "dy": 8, "fontSize": 13, "fontWeight": 700, "color": "#1e2b2a"},
+          "encoding": {"x": {"field": "x_mid", "type": "quantitative"}, "y": {"datum": 1}, "text": {"field": "state"}}
+        },
+        {
+          "mark": {"type": "text", "baseline": "top", "dy": 25, "fontSize": 11, "color": "#5b6b66"},
+          "encoding": {"x": {"field": "x_mid", "type": "quantitative"}, "y": {"datum": 1}, "text": {"field": "received", "format": ","}}
+        },
+        {
+          "description": "Share rehomed, written inside the blue block where it fits.",
+          "transform": [{"filter": "datum.received >= 300"}],
+          "mark": {"type": "text", "baseline": "top", "dy": 8, "fontSize": 13, "fontWeight": 700, "color": "#ffffff"},
+          "encoding": {"x": {"field": "x_mid", "type": "quantitative"}, "y": {"datum": 0}, "text": {"field": "share", "format": ".0%"}}
+        }
+      ]
+    }
+  ]
+}

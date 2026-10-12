@@ -1,0 +1,172 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 6, ridgeline chart. One curve per state: each month's share of that state's wild rabbit sightings, 2010-2025. Shares rather than counts, so a state with few sightings has the same-sized curve as a busy one and the timing can be compared. Rows overlap slightly, like a range of hills. The NT is left out (fewer than 300 sightings in 16 years). States are ordered by how many sightings they have, most first. The ACT's January spike (a third of its sightings) comes from 561 FeralScan reports in January 2017, the year of the K5 virus release.",
+  "data": {
+    "url": "data/ala/sightings-by-state-month.csv",
+    "format": {
+      "parse": {
+        "month": "number",
+        "count": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "filter": "datum.state !== 'NT'"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "sum",
+          "field": "count",
+          "as": "state_total"
+        }
+      ],
+      "groupby": [
+        "state"
+      ]
+    },
+    {
+      "calculate": "datum.count / datum.state_total",
+      "as": "share"
+    },
+    {
+      "calculate": "timeFormat(datetime(2000, datum.month - 1, 1), '%B')",
+      "as": "month_name"
+    }
+  ],
+  "facet": {
+    "row": {
+      "field": "state",
+      "type": "nominal",
+      "sort": [
+        "NSW",
+        "VIC",
+        "SA",
+        "WA",
+        "ACT",
+        "QLD",
+        "TAS"
+      ],
+      "header": {
+        "title": null,
+        "labelAngle": 0,
+        "labelAlign": "left",
+        "labelOrient": "left",
+        "labelPadding": 10,
+        "labelFontSize": 13,
+        "labelFontWeight": 600
+      }
+    }
+  },
+  "spacing": -30,
+  "bounds": "flush",
+  "spec": {
+    "width": 460,
+    "height": 52,
+    "layer": [
+      {
+        "description": "Autumn band (March to May), behind every curve.",
+        "data": {
+          "values": [
+            {}
+          ]
+        },
+        "mark": {
+          "type": "rect",
+          "color": "#e3e8e1",
+          "opacity": 1
+        },
+        "encoding": {
+          "x": {
+            "datum": 2.5,
+            "type": "quantitative"
+          },
+          "x2": {
+            "datum": 5.5
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "area",
+          "interpolate": "monotone",
+          "color": "#c0662b",
+          "opacity": 0.88,
+          "line": {
+            "color": "#f3f5f1",
+            "strokeWidth": 1.5
+          }
+        },
+        "encoding": {
+          "x": {
+            "field": "month",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                1,
+                12
+              ],
+              "nice": false
+            },
+            "axis": {
+              "title": null,
+              "grid": false,
+              "values": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ],
+              "labelExpr": "['J','F','M','A','M','J','J','A','S','O','N','D'][datum.value - 1]"
+            }
+          },
+          "y": {
+            "field": "share",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                0,
+                0.34
+              ],
+              "range": [
+                52,
+                -36
+              ]
+            },
+            "stack": null,
+            "axis": null
+          },
+          "tooltip": [
+            {
+              "field": "state",
+              "title": "State"
+            },
+            {
+              "field": "month_name",
+              "title": "Month"
+            },
+            {
+              "field": "share",
+              "title": "Share of the year's sightings",
+              "format": ".0%"
+            },
+            {
+              "field": "count",
+              "title": "Sightings 2010–25",
+              "format": ","
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

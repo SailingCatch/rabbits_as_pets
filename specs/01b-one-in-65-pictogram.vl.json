@@ -1,0 +1,47 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 1b, pictogram (Isotype style). 65 houses, one of which has a rabbit: about 1 in 65 Australian households keeps one. Worked out from the AMA survey: 3% of households own small mammals and 51% of those keep rabbits (1.53 in 100, or about 1 in 65).",
+
+  "data": {"sequence": {"start": 0, "stop": 65, "as": "i"}},
+
+  "transform": [
+    {"calculate": "datum.i % 13", "as": "col"},
+    {"calculate": "floor(datum.i / 13)", "as": "row"},
+    {"calculate": "datum.i === 32", "as": "has_rabbit"}
+  ],
+
+  "width": 560,
+  "height": 220,
+
+  "encoding": {
+    "x": {"field": "col", "type": "ordinal", "axis": null},
+    "y": {"field": "row", "type": "ordinal", "axis": null}
+  },
+
+  "layer": [
+    {
+      "description": "A household without a rabbit: a simple house shape.",
+      "transform": [{"filter": "!datum.has_rabbit"}],
+      "mark": {
+        "type": "point",
+        "shape": "M0,-1L1,-0.1L0.7,-0.1L0.7,0.9L-0.7,0.9L-0.7,-0.1L-1,-0.1Z",
+        "size": 700,
+        "filled": true,
+        "color": "#c9d1c8",
+        "opacity": 1
+      }
+    },
+    {
+      "description": "The one household with a rabbit: a rabbit silhouette (body, head, two ears, tail) in the pet colour.",
+      "transform": [{"filter": "datum.has_rabbit"}],
+      "mark": {
+        "type": "point",
+        "shape": "M-0.45,0.5A0.6,0.42 0 1,0 0.75,0.5A0.6,0.42 0 1,0 -0.45,0.5Z M-0.8,-0.02A0.3,0.28 0 1,0 -0.2,-0.02A0.3,0.28 0 1,0 -0.8,-0.02Z M-0.62,-0.98A0.1,0.36 0 1,0 -0.62,-0.26A0.1,0.36 0 1,0 -0.62,-0.98Z M-0.38,-0.94A0.1,0.36 0 1,0 -0.38,-0.22A0.1,0.36 0 1,0 -0.38,-0.94Z M0.72,0.28A0.13,0.13 0 1,0 0.98,0.28A0.13,0.13 0 1,0 0.72,0.28Z",
+        "size": 1500,
+        "filled": true,
+        "color": "#4a64b0",
+        "opacity": 1
+      }
+    }
+  ]
+}

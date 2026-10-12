@@ -1,0 +1,74 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 8, hexagon tile map. Each state and territory is one equal-sized hexagon placed roughly where it sits on the map, coloured by whether pet rabbits are allowed. Equal sizes stop huge WA dominating and tiny ACT disappearing. Hover for the rule and its government source.",
+
+  "data": {"url": "data/legal/rabbit-legal-status.csv"},
+
+  "transform": [
+    {
+      "description": "Tile positions: column (in hexagon widths) and row. Odd rows sit half a hexagon across, so neighbours touch the way the states do.",
+      "calculate": "{'NT': [1, 0], 'QLD': [2, 0], 'WA': [0.5, 1], 'SA': [1.5, 1], 'NSW': [2.5, 1], 'VIC': [2, 2], 'ACT': [3, 2], 'TAS': [1.5, 3]}[datum.state]",
+      "as": "tile"
+    },
+    {"calculate": "datum.tile[0]", "as": "col"},
+    {"calculate": "datum.tile[1] * 0.866", "as": "row"},
+    {"calculate": "{'Allowed': 'Allowed', 'Allowed with extra rules': 'Extra rules', 'Banned': 'Banned'}[datum.status]", "as": "short_status"},
+    {"calculate": "datum.source_url ? datum.source_url : 'Not yet checked'", "as": "source"}
+  ],
+
+  "width": 520,
+  "height": 507,
+
+  "encoding": {
+    "x": {"field": "col", "type": "quantitative", "scale": {"domain": [-0.2, 3.7]}, "axis": null},
+    "y": {"field": "row", "type": "quantitative", "scale": {"domain": [-0.6, 3.2], "reverse": true}, "axis": null}
+  },
+
+  "layer": [
+    {
+      "description": "The hexagons. Size is set so neighbouring tiles almost touch at this chart size.",
+      "mark": {
+        "type": "point",
+        "shape": "M0,-1L0.866,-0.5L0.866,0.5L0,1L-0.866,0.5L-0.866,-0.5Z",
+        "size": 21000,
+        "filled": true,
+        "opacity": 1,
+        "stroke": "#f3f5f1",
+        "strokeWidth": 3
+      },
+      "encoding": {
+        "color": {
+          "field": "status",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Allowed", "Allowed with extra rules", "Banned"],
+            "range": ["#4a64b0", "#97a8d8", "#c0662b"]
+          },
+          "legend": {"title": null, "orient": "bottom", "direction": "horizontal", "symbolType": "M0,-1L0.866,-0.5L0.866,0.5L0,1L-0.866,0.5L-0.866,-0.5Z", "symbolSize": 180}
+        },
+        "tooltip": [
+          {"field": "name", "title": "Where"},
+          {"field": "status", "title": "Pet rabbits"},
+          {"field": "rule", "title": "Rule"},
+          {"field": "source", "title": "Source"}
+        ]
+      }
+    },
+    {
+      "description": "State code, large.",
+      "mark": {"type": "text", "dy": -8, "fontSize": 20, "fontWeight": 700},
+      "encoding": {
+        "text": {"field": "state"},
+        "color": {"condition": {"test": "datum.status === 'Allowed with extra rules'", "value": "#1e2b2a"}, "value": "#ffffff"}
+      }
+    },
+    {
+      "description": "Status, small, under the code, so the map reads without the legend.",
+      "mark": {"type": "text", "dy": 14, "fontSize": 12},
+      "encoding": {
+        "text": {"field": "short_status"},
+        "color": {"condition": {"test": "datum.status === 'Allowed with extra rules'", "value": "#1e2b2a"}, "value": "#ffffff"}
+      }
+    }
+  ]
+}

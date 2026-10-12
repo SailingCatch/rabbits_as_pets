@@ -24,6 +24,12 @@ const CHARTS = [
     needs: ["data/ama/pets-in-australia-2025.csv"],
     idiom: "Small-multiple waffle charts",
   },
+  {
+    id: "chart-01b",
+    spec: "specs/01b-one-in-65-pictogram.vl.json",
+    needs: [],
+    idiom: "Pictogram (Isotype)",
+  },
 
   // 02 From a few rabbits to 600 million
   {
@@ -34,22 +40,23 @@ const CHARTS = [
   },
   {
     id: "chart-03",
-    spec: "specs/03-fences-map.vl.json",
+    // Alternative: specs/03-fences-map.vl.json (dots instead of hexagons;
+    // needs data/ala/sightings-points.csv, and renderer: "canvas")
+    spec: "specs/03-fences-hexmap.vl.json",
     needs: [
       "data/geo/australia-states.topojson",
       "data/geo/rabbit-proof-fences.geojson",
-      "data/ala/sightings-points.csv",
+      "data/ala/sightings-hexbins.geojson",
     ],
-    idiom: "Map: lines over a dot map",
-    renderer: "canvas",
+    idiom: "Map: hexagon density map with lines",
   },
 
   // 03 The virus war
   {
     id: "chart-04",
-    spec: "specs/04-rhdv2-slope.vl.json",
+    spec: "specs/04-rhdv2-dumbbell.vl.json",
     needs: ["data/ramsey/rhdv2-site-abundance.csv"],
-    idiom: "Slope chart (log scale)",
+    idiom: "Dumbbell chart (before → after)",
   },
 
   // 04 Still everywhere
@@ -62,9 +69,11 @@ const CHARTS = [
   },
   {
     id: "chart-06",
-    spec: "specs/06-sightings-month-heatmap.vl.json",
-    needs: ["data/ala/sightings-by-month.csv"],
-    idiom: "Heatmap",
+    // Alternative: specs/06-sightings-month-heatmap.vl.json
+    // (needs data/ala/sightings-by-month.csv)
+    spec: "specs/06-seasons-ridgeline.vl.json",
+    needs: ["data/ala/sightings-by-state-month.csv"],
+    idiom: "Ridgeline chart",
   },
   {
     id: "chart-07",
@@ -80,13 +89,11 @@ const CHARTS = [
   // 05 The rules, and the risks
   {
     id: "chart-08",
-    spec: "specs/08-legal-status-choropleth.vl.json",
-    needs: [
-      "data/geo/australia-states.topojson",
-      "data/geo/state-centroids.csv",
-      "data/legal/rabbit-legal-status.csv",
-    ],
-    idiom: "Map: categorical choropleth",
+    // Alternative: specs/08-legal-status-choropleth.vl.json (real state
+    // shapes; also needs the two data/geo files)
+    spec: "specs/08-legal-status-tilemap.vl.json",
+    needs: ["data/legal/rabbit-legal-status.csv"],
+    idiom: "Map: hexagon tile map",
   },
   {
     id: "chart-09",
@@ -108,8 +115,9 @@ const CHARTS = [
   },
   {
     id: "chart-11",
-    spec: "specs/11-rspca-outcomes-stacked.vl.json",
+    // Alternative: specs/11-rspca-outcomes-stacked.vl.json (100% stacked bars)
+    spec: "specs/11-rspca-outcomes-marimekko.vl.json",
     needs: ["data/rspca/other-animals-by-state.csv"],
-    idiom: "100% stacked bar chart",
+    idiom: "Marimekko (mosaic) chart",
   },
 ];

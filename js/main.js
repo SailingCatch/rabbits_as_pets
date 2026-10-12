@@ -48,16 +48,21 @@ const THEME = {
   view: { stroke: null },         // no box around each chart
   padding: { top: 4, right: 4, bottom: 4, left: 4 },
 
+  // Newspaper-style axes: no axis lines or tick marks, faint gridlines only
+  // on the value axis, muted labels. Specs can still turn things back on.
   axis: {
     labelColor: COLOURS.inkMuted,
     labelFontSize: 12,
-    titleColor: COLOURS.ink,
+    titleColor: COLOURS.inkMuted,
     titleFontSize: 12,
-    titleFontWeight: 500,
-    domainColor: COLOURS.rule,
-    tickColor: COLOURS.rule,
+    titleFontWeight: 400,
+    domain: false,
+    ticks: false,
+    labelPadding: 6,
     gridColor: "#dde3dc",
+    gridWidth: 1,
   },
+  axisBand: { grid: false },        // no gridlines between categories
 
   legend: {
     labelColor: COLOURS.inkMuted,

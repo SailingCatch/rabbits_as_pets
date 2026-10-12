@@ -1,0 +1,90 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 3, hexagon density map with lines. Wild rabbit sightings 2021-2025 counted into equal-area hexagons about 80 km across (darker = more), with Western Australia's three rabbit-proof fences (built 1902-1907) drawn over the top. The hexagons are made by scripts/prepare_ala.py in this same projection, so each covers the same area.",
+
+  "width": "container",
+  "height": 600,
+
+  "projection": {
+    "type": "conicEqualArea",
+    "parallels": [-18, -36],
+    "rotate": [-132, 0],
+    "center": [0, -27]
+  },
+
+  "layer": [
+    {
+      "description": "Base map: land in a quiet fill.",
+      "data": {
+        "url": "data/geo/australia-states.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": null}
+    },
+    {
+      "description": "Hexagons, shaded on a log scale: each colour step is ten times more sightings.",
+      "data": {
+        "url": "data/ala/sightings-hexbins.geojson",
+        "format": {"type": "json", "property": "features"}
+      },
+      "mark": {"type": "geoshape", "stroke": "#f3f5f1", "strokeWidth": 0.6},
+      "encoding": {
+        "color": {
+          "field": "properties.count",
+          "type": "quantitative",
+          "scale": {"type": "log", "domain": [1, 10000], "range": ["#f6e7c8", "#e9c27f", "#d3913f", "#a9611f", "#6e3a12"]},
+          "legend": {
+            "title": "Sightings in a hexagon, 2021–25",
+            "orient": "none", "legendX": 10, "legendY": 520,
+            "direction": "horizontal", "gradientLength": 200,
+            "values": [1, 10, 100, 1000, 10000], "format": ",d"
+          }
+        },
+        "tooltip": [{"field": "properties.count", "title": "Sightings 2021–25", "format": ","}]
+      }
+    },
+    {
+      "description": "State borders drawn on top of the hexagons, thin and white.",
+      "data": {
+        "url": "data/geo/australia-states.topojson",
+        "format": {"type": "topojson", "feature": "states"}
+      },
+      "mark": {"type": "geoshape", "filled": false, "stroke": "#ffffff", "strokeWidth": 1}
+    },
+    {
+      "description": "The three fences, in ink so they read as a man-made line across the land.",
+      "data": {
+        "url": "data/geo/rabbit-proof-fences.geojson",
+        "format": {"type": "json", "property": "features"}
+      },
+      "mark": {"type": "geoshape", "filled": false, "stroke": "#1e2b2a", "strokeWidth": 2.5, "strokeCap": "round"},
+      "encoding": {
+        "tooltip": [{"field": "properties.fence", "title": "Rabbit-proof fence"}]
+      }
+    },
+    {
+      "description": "Direct labels instead of a legend. Positions are placed by hand next to each line.",
+      "data": {
+        "values": [
+          {"lon": 120.4, "lat": -20.6, "text": "No. 1 fence"},
+          {"lon": 117.2, "lat": -30.2, "text": "No. 2"}
+        ]
+      },
+      "mark": {"type": "text", "align": "left", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": 8},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "text"}
+      }
+    },
+    {
+      "data": {"values": [{"lon": 114.6, "lat": -27.2, "text": "No. 3"}]},
+      "mark": {"type": "text", "align": "right", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": -6},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "text"}
+      }
+    }
+  ]
+}

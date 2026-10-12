@@ -18,6 +18,8 @@ ready-to-use files are committed (about 360 KB in total).
 | `ala/sightings-grid-by-year.csv` | `scripts/prepare_ala.py` | 3 |
 | `ala/sightings-by-month.csv` | `scripts/prepare_ala.py` | 4 |
 | `ala/sightings-by-state-year.csv` | `scripts/prepare_ala.py` | 5 |
+| `ala/sightings-hexbins.geojson` | `scripts/prepare_ala.py` | 3 (hexagon map) |
+| `ala/sightings-by-state-month.csv` | `scripts/prepare_ala.py` | 6 (ridgeline) |
 | `ala/source.json` | `scripts/prepare_ala.py` | (metadata) |
 | `rspca/other-animals-by-state.csv` | `scripts/extract_rspca.py` | 6, 7, 9, 10 |
 | `rspca/received-by-animal.csv` | `scripts/extract_rspca.py` | 8 |

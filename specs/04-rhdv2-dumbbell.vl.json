@@ -1,0 +1,87 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 4, dumbbell chart. One row per monitoring site: the grey dot is how many wild rabbits were counted per km of survey before the RHDV2 virus arrived, the ochre dot is after, and the line between them is the fall. The drop is written at the end of each row. Sites are sorted by how many rabbits they had before.",
+
+  "data": {"url": "data/ramsey/rhdv2-site-abundance.csv", "format": {"parse": {"before": "number", "after": "number", "change": "number"}}},
+
+  "transform": [
+    {"calculate": "datum.site + ' (' + datum.state + ')'", "as": "where"},
+    {"calculate": "format(-datum.change, '.0%') + ' fewer'", "as": "drop_label"}
+  ],
+
+  "width": "container",
+  "height": {"step": 52},
+
+  "encoding": {
+    "y": {
+      "field": "where",
+      "type": "nominal",
+      "sort": {"field": "before", "order": "descending"},
+      "axis": {"title": null, "domain": false, "ticks": false, "grid": false, "labelFontSize": 13, "labelColor": "#1e2b2a", "labelPadding": 10}
+    }
+  },
+
+  "layer": [
+    {
+      "description": "The fall: a thick line from before to after.",
+      "mark": {"type": "rule", "strokeWidth": 4, "color": "#e9c9b0", "strokeCap": "round"},
+      "encoding": {
+        "x": {
+          "field": "after",
+          "type": "quantitative",
+          "scale": {"domain": [0, 160], "nice": false},
+          "axis": {"title": "Rabbits counted per km of survey", "titleAnchor": "start", "titleAlign": "left", "values": [0, 25, 50, 75, 100, 125, 150], "orient": "top", "domain": false, "ticks": false, "grid": true}
+        },
+        "x2": {"field": "before"}
+      }
+    },
+    {
+      "description": "Before RHDV2: an open grey dot.",
+      "mark": {"type": "circle", "size": 150, "color": "#a3aea8", "opacity": 1, "stroke": "#f3f5f1", "strokeWidth": 2},
+      "encoding": {
+        "x": {"field": "before", "type": "quantitative"},
+        "tooltip": [
+          {"field": "where", "title": "Site"},
+          {"field": "before", "title": "Before RHDV2 (per km)", "format": ".1f"},
+          {"field": "after", "title": "After RHDV2 (per km)", "format": ".1f"},
+          {"field": "drop_label", "title": "Change"}
+        ]
+      }
+    },
+    {
+      "description": "After RHDV2: a solid ochre dot.",
+      "mark": {"type": "circle", "size": 150, "color": "#c0662b", "opacity": 1, "stroke": "#f3f5f1", "strokeWidth": 2},
+      "encoding": {
+        "x": {"field": "after", "type": "quantitative"},
+        "tooltip": [
+          {"field": "where", "title": "Site"},
+          {"field": "before", "title": "Before RHDV2 (per km)", "format": ".1f"},
+          {"field": "after", "title": "After RHDV2 (per km)", "format": ".1f"},
+          {"field": "drop_label", "title": "Change"}
+        ]
+      }
+    },
+    {
+      "description": "The drop, written just right of the 'before' dot.",
+      "mark": {"type": "text", "align": "left", "dx": 14, "fontSize": 13, "fontWeight": 700, "color": "#a9611f"},
+      "encoding": {
+        "x": {"field": "before", "type": "quantitative"},
+        "text": {"field": "drop_label"}
+      }
+    },
+    {
+      "description": "Direct key on the top row only, instead of a legend.",
+      "transform": [{"filter": "datum.site === 'Gudgenby'"}],
+      "layer": [
+        {
+          "mark": {"type": "text", "baseline": "bottom", "dy": -14, "fontSize": 12, "color": "#5b6b66", "text": "Before RHDV2"},
+          "encoding": {"x": {"field": "before", "type": "quantitative"}}
+        },
+        {
+          "mark": {"type": "text", "baseline": "bottom", "dy": -14, "fontSize": 12, "fontWeight": 600, "color": "#a9611f", "text": "After"},
+          "encoding": {"x": {"field": "after", "type": "quantitative"}}
+        }
+      ]
+    }
+  ]
+}
