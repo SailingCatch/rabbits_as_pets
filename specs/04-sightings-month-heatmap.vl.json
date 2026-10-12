@@ -1,0 +1,42 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 4, heatmap. Rows are years, columns are months, and each cell's colour shows how many wild rabbit sightings were reported that month.",
+
+  "data": {
+    "url": "data/ala/sightings-by-month.csv",
+    "format": {"parse": {"year": "number", "month": "number", "count": "number"}}
+  },
+
+  "transform": [
+    {"calculate": "timeFormat(datetime(2000, datum.month - 1, 1), '%b')", "as": "month_name"}
+  ],
+
+  "width": "container",
+  "height": {"step": 18},
+
+  "mark": {"type": "rect", "stroke": "#f3f5f1", "strokeWidth": 2, "cornerRadius": 2},
+
+  "encoding": {
+    "x": {
+      "field": "month_name",
+      "type": "ordinal",
+      "sort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "axis": {"title": null, "orient": "top", "domain": false, "ticks": false, "labelAngle": 0}
+    },
+    "y": {
+      "field": "year",
+      "type": "ordinal",
+      "axis": {"title": null, "domain": false, "ticks": false}
+    },
+    "color": {
+      "field": "count",
+      "type": "quantitative",
+      "legend": {"title": "Sightings", "format": ",d"}
+    },
+    "tooltip": [
+      {"field": "month_name", "title": "Month"},
+      {"field": "year", "title": "Year"},
+      {"field": "count", "title": "Sightings", "format": ","}
+    ]
+  }
+}

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rabbits as Pets in Australia</title>
+  <meta name="description" content="A pet on the couch, a pest in the paddock: a data story about keeping rabbits in Australia.">
+
+  <!-- Fonts: Bricolage Grotesque for headings and chart labels, Literata for reading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Vega, Vega-Lite and Vega-Embed (major versions pinned so an update can't break the page) -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+
+<body>
+
+<!-- ======================================================================
+     HERO: the hook. One sentence of tension, then straight into a map.
+     ====================================================================== -->
+<header class="hero">
+  <div class="column">
+    <h1>A pet on the couch, a pest in the paddock</h1>
+    <p class="lede">
+      Rabbits are one of Australia's favourite small pets and one of its worst
+      invasive animals. That double life explains why owning one comes with
+      rules no dog or cat owner ever has to think about.
+    </p>
+    <p class="byline">By &lt;your name&gt; &middot; October 2026</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ====================================================================
+       SECTION 1: wild rabbits are everywhere people live
+       ==================================================================== -->
+  <section id="everywhere">
+    <h2>Rabbits are never far away</h2>
+    <p>
+      Every dot below is a <span class="key key--pest">wild rabbit</span>
+      someone reported to the Atlas of Living Australia. They cluster where
+      people live and farm, which is exactly where most pet rabbits live too.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Reported wild rabbit sightings</h3>
+      <p class="chart__subtitle">Each dot is one record. Choose a year below the map.</p>
+      <div id="chart-01" class="chart__canvas"></div>
+      <figcaption>
+        Sightings are reported by the public and by surveys, so they show where
+        people looked as well as where rabbits are.
+        Source: Atlas of Living Australia.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       SECTION 2: the rules depend on where you live
+       ==================================================================== -->
+  <section id="rules">
+    <h2>Where you're allowed to keep one</h2>
+    <p>
+      In Queensland, keeping a pet rabbit is illegal under the Biosecurity Act
+      2014. The maximum penalty is 500 penalty units, about $83,450. Everywhere
+      else, rabbits can be kept as pets, though some places add rules of their own.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Can you keep a pet rabbit here?</h3>
+      <p class="chart__subtitle">Hover over a state or territory for the rule and its source.</p>
+      <div id="chart-02" class="chart__canvas"></div>
+      <figcaption>
+        Source: each state and territory government's website (linked in the tooltip).
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       SECTION 3: the wild population, over time and across the year
+       ==================================================================== -->
+  <section id="wild">
+    <h2>The wild ones</h2>
+    <p>
+      Why should a pet owner care about wild rabbits? Because they carry the
+      diseases that kill pets, and because they're the reason the rules exist.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Where sightings were reported, year by year</h3>
+      <p class="chart__subtitle">Circles grow with the number of records in each area.</p>
+      <div id="chart-03" class="chart__canvas"></div>
+      <figcaption>Source: Atlas of Living Australia.</figcaption>
+    </figure>
+
+    <div class="wide pair">
+      <figure class="chart">
+        <h3>When people see rabbits</h3>
+        <p class="chart__subtitle">Records by month and year. Darker means more.</p>
+        <div id="chart-04" class="chart__canvas"></div>
+        <figcaption>Source: Atlas of Living Australia.</figcaption>
+      </figure>
+
+      <figure class="chart">
+        <h3>Sightings for every 1,000 km²</h3>
+        <p class="chart__subtitle">By state and territory.</p>
+        <div id="chart-05" class="chart__canvas"></div>
+        <figcaption>Sources: Atlas of Living Australia; Australian Bureau of Statistics.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       SECTION 4: small pets in shelters (RSPCA "Other animals")
+       ==================================================================== -->
+  <section id="shelters">
+    <h2>When small pets need a new home</h2>
+    <p>
+      The RSPCA doesn't count rabbits on their own. It groups them with other
+      small pets such as guinea pigs, ferrets, mice and birds under
+      &ldquo;other animals&rdquo;. These charts use that group, so they tell us
+      about <span class="key key--pet">small pets including rabbits</span>,
+      not rabbits alone.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Small pets taken in by the RSPCA, by state</h3>
+      <p class="chart__subtitle">Circle size shows how many arrived; colour shows the share found a new home.</p>
+      <div id="chart-06" class="chart__canvas"></div>
+      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+    </figure>
+
+    <figure class="chart wide">
+      <h3>Arrivals by state over time</h3>
+      <div id="chart-07" class="chart__canvas"></div>
+      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+    </figure>
+
+    <div class="wide pair">
+      <figure class="chart">
+        <h3>Small pets compared with dogs and cats</h3>
+        <div id="chart-08" class="chart__canvas"></div>
+        <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+      </figure>
+
+      <figure class="chart">
+        <h3>More saved than fifteen years ago</h3>
+        <div id="chart-09" class="chart__canvas"></div>
+        <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+      </figure>
+    </div>
+
+    <figure class="chart wide">
+      <h3>What happens to them, by state</h3>
+      <div id="chart-10" class="chart__canvas"></div>
+      <figcaption>Source: RSPCA Australia annual statistics.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       SECTION 5: the disease link between pets and pests
+       ==================================================================== -->
+  <section id="disease">
+    <h2>A disease that crosses the fence</h2>
+    <p>
+      Rabbit calicivirus spreads from wild rabbits to pets through insects,
+      contaminated grass and even shoes. Vaccines protect against it, but there
+      is no vaccine for myxomatosis allowed in Australia, because it could
+      spread into the wild rabbits it's meant to control.
+    </p>
+
+    <figure class="chart wide">
+      <h3>Pets were tested more than wild rabbits</h3>
+      <div id="chart-11" class="chart__canvas"></div>
+      <figcaption>Source: Peng et al. (2023), <em>Viruses</em> 15(12):2348.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       SECTION 6: what owners can do
+       ==================================================================== -->
+  <section id="care">
+    <h2>Looking after a rabbit well</h2>
+
+    <figure class="chart wide">
+      <h3>Where rabbit care falls short</h3>
+      <div id="chart-12" class="chart__canvas"></div>
+      <figcaption>Source: Agriculture Victoria rabbit owner survey.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ====================================================================
+       ABOUT THE DATA: required metadata (sources, author, date)
+       ==================================================================== -->
+  <section id="sources" class="sources">
+    <h2>About the data</h2>
+    <ul>
+      <li>
+        <strong>Wild rabbit sightings:</strong> Atlas of Living Australia
+        occurrence records for <em>Oryctolagus cuniculus</em>, downloaded
+        &lt;date&gt;. Records carry CC BY 4.0 or CC BY-NC 4.0 licences.
+        <a href="https://www.ala.org.au/">ala.org.au</a>
+      </li>
+      <li>
+        <strong>Shelter statistics:</strong> RSPCA Australia, Annual Statistics,
+        &ldquo;Other animals&rdquo; tables, 2010–11 to 2024–25.
+        <a href="https://www.rspca.org.au/about/annual-statistics">rspca.org.au</a>
+      </li>
+      <li>
+        <strong>State boundaries:</strong> Australian Bureau of Statistics,
+        Australian Statistical Geography Standard Edition 3, 2021, CC BY 4.0.
+        <a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files">abs.gov.au</a>
+      </li>
+      <li>
+        <strong>Legal status:</strong> compiled from each state and territory
+        government's website; every source is linked in the map tooltip.
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="column">
+  <p>
+    Created by &lt;your name&gt; for FIT3179 Data Visualisation, Monash University,
+    October 2026. Charts built with Vega-Lite.
+    Generative AI (Claude) was used to help set up the code and draft text.
+  </p>
+</footer>
+
+<!-- Order matters: charts.js defines the chart list, main.js draws it -->
+<script src="js/charts.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

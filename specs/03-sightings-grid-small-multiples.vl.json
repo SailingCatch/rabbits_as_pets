@@ -1,0 +1,57 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 3, small-multiple maps. One small map per year; each circle is a 1-degree square (about 100 km across) sized by how many sightings were reported in it.",
+
+  "data": {
+    "url": "data/ala/sightings-grid-by-year.csv",
+    "format": {"parse": {"year": "number", "lon": "number", "lat": "number", "count": "number"}}
+  },
+
+  "facet": {
+    "field": "year",
+    "type": "ordinal",
+    "header": {"title": null, "labelAnchor": "start"}
+  },
+  "columns": 4,
+
+  "spec": {
+    "width": 200,
+    "height": 175,
+    "projection": {
+      "type": "conicEqualArea",
+      "parallels": [-18, -36],
+      "rotate": [-132, 0],
+      "center": [0, -27]
+    },
+    "layer": [
+      {
+        "description": "Base map, repeated in every panel.",
+        "data": {
+          "url": "data/geo/australia-states.topojson",
+          "format": {"type": "topojson", "feature": "states"}
+        },
+        "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": "#f3f5f1", "strokeWidth": 0.75}
+      },
+      {
+        "description": "Grid squares, sized by number of sightings.",
+        "mark": {"type": "circle", "color": "#c0662b", "opacity": 0.75, "stroke": "#f3f5f1", "strokeWidth": 0.5},
+        "encoding": {
+          "longitude": {"field": "lon", "type": "quantitative"},
+          "latitude": {"field": "lat", "type": "quantitative"},
+          "size": {
+            "field": "count",
+            "type": "quantitative",
+            "scale": {"range": [2, 220]},
+            "legend": {"title": "Sightings in a 100 km square"}
+          },
+          "tooltip": [
+            {"field": "year", "title": "Year"},
+            {"field": "count", "title": "Sightings", "format": ","}
+          ]
+        }
+      }
+    ]
+  },
+
+  "resolve": {"scale": {"size": "shared"}}
+}

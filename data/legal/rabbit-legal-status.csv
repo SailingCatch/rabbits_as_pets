@@ -1,0 +1,9 @@
+state,name,status,rule,source_url,verified
+NSW,New South Wales,Allowed,Domestic rabbits can be kept as pets; keeping wild rabbits is not allowed.,,no
+VIC,Victoria,Allowed,Domestic rabbits can be kept as pets.,,no
+QLD,Queensland,Banned,"Keeping, selling or bringing a rabbit into Queensland is illegal under the Biosecurity Act 2014. Maximum penalty: 500 penalty units.",https://www.business.qld.gov.au/industries/farms-fishing-forestry/agriculture/biosecurity/animals/invasive/restricted/rabbit,yes
+SA,South Australia,Allowed,Domestic rabbits can be kept as pets.,,no
+WA,Western Australia,Allowed,Domestic rabbits can be kept as pets.,,no
+TAS,Tasmania,Allowed,Domestic rabbits can be kept as pets.,,no
+NT,Northern Territory,Allowed,Domestic rabbits are listed among animals that do not need a permit.,https://nt.gov.au/environment/animals/wildlife-permits/animals-that-do-not-need-a-permit,yes
+ACT,Australian Capital Territory,Allowed with a code of practice,Pet rabbits can be kept but owners must follow a mandatory code of practice.,,no

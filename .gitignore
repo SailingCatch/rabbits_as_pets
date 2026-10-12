@@ -1,0 +1,16 @@
+# Raw downloads (ALA zip, ABS shapefiles, RSPCA PDFs) are large and are
+# turned into small files in data/ by the scripts. Keep them out of git.
+data/raw/
+
+# Operating system and editor clutter
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node (mapshaper is run with npx, nothing needs installing)
+node_modules/
