@@ -31,13 +31,13 @@ const CHARTS = [
   {
     id: "chart-01",
     spec: "specs/01-pet-ownership-waffle.vl.json",
-    needs: ["data/ama/pets-in-australia-2025.csv"],
-    idiom: "Small-multiple waffle charts",
+    needs: ["data/ama/pets-in-australia-2025.csv", "data/icons.json"],
+    idiom: "Small-multiple picture waffles (Isotype)",
   },
   {
     id: "chart-01b",
     spec: "specs/01b-one-in-65-pictogram.vl.json",
-    needs: [],
+    needs: ["data/icons.json"],
     idiom: "Pictogram (Isotype)",
   },
   {
@@ -120,8 +120,8 @@ const CHARTS = [
   {
     id: "chart-05a",
     spec: "specs/05a-population-by-rule-waffle.vl.json",
-    needs: ["data/abs/population-by-state.csv", "data/legal/rabbit-legal-status.csv"],
-    idiom: "Waffle chart",
+    needs: ["data/abs/population-by-state.csv", "data/legal/rabbit-legal-status.csv", "data/icons.json"],
+    idiom: "Picture waffle (people)",
   },
   {
     id: "chart-08",
@@ -135,8 +135,8 @@ const CHARTS = [
   {
     id: "chart-09",
     spec: "specs/09-virus-samples-waffle.vl.json",
-    needs: ["data/peng/lagovirus-samples.csv"],
-    idiom: "Waffle chart",
+    needs: ["data/peng/lagovirus-samples.csv", "data/icons.json"],
+    idiom: "Picture waffle (pet rabbit / wild rabbit / hare)",
   },
 
   // 07 When it goes wrong
@@ -152,10 +152,11 @@ const CHARTS = [
   },
   {
     id: "chart-11",
-    // Alternative: specs/11-rspca-outcomes-stacked.vl.json (100% stacked bars)
-    spec: "specs/11-rspca-outcomes-marimekko.vl.json",
+    // Alternatives: specs/11-rspca-outcomes-marimekko.vl.json (mosaic) and
+    // specs/11-rspca-outcomes-stacked.vl.json (100% stacked bars)
+    spec: "specs/11-rspca-outcomes-diverging.vl.json",
     needs: ["data/rspca/other-animals-by-state.csv"],
-    idiom: "Marimekko (mosaic) chart",
+    idiom: "Diverging bar chart",
   },
 
   // 08 Why we love them

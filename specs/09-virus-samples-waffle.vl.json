@@ -1,43 +1,39 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 9, waffle chart. 100 squares stand for the 2,777 dead rabbits and hares sent to CSIRO for virus testing (2015-2022), coloured by where the animal came from. Half were pets.",
+  "description": "Chart 9, picture waffle. 100 animals stand for the 2,777 dead rabbits and hares sent to CSIRO for virus testing (2015-2022): a lop-eared pet rabbit, an upright-eared wild rabbit, a grey wild rabbit where the record didn't say (probably wild), and a hare. Half were pets.",
 
   "data": {"url": "data/peng/lagovirus-samples.csv"},
 
   "transform": [
     {"filter": "datum.breakdown === 'source'"},
     {"calculate": "toNumber(datum.samples)", "as": "samples"},
-    {
-      "calculate": "{'Pet (domestic) rabbits': 1, 'Wild rabbits': 2, 'Unknown': 3, 'Hares': 4}[datum.category]",
-      "as": "order"
-    },
+    {"calculate": "{'Pet (domestic) rabbits': 1, 'Wild rabbits': 2, 'Unknown': 3, 'Hares': 4}[datum.category]", "as": "order"},
     {"calculate": "{'Pet (domestic) rabbits': 'Pet rabbits', 'Wild rabbits': 'Wild rabbits', 'Unknown': 'Not recorded (probably wild)', 'Hares': 'Hares'}[datum.category]", "as": "group"},
+    {"calculate": "{'Pet (domestic) rabbits': 'pet_rabbit', 'Wild rabbits': 'wild_rabbit', 'Unknown': 'wild_rabbit', 'Hares': 'hare'}[datum.category]", "as": "icon"},
     {"joinaggregate": [{"op": "sum", "field": "samples", "as": "total"}]},
-    {
-      "window": [{"op": "sum", "field": "samples", "as": "running"}],
-      "sort": [{"field": "order"}],
-      "frame": [null, 0]
-    },
+    {"window": [{"op": "sum", "field": "samples", "as": "running"}], "sort": [{"field": "order"}], "frame": [null, 0]},
     {"calculate": "(datum.running - datum.samples) / datum.total * 100", "as": "start"},
     {"calculate": "datum.running / datum.total * 100", "as": "end"},
     {"calculate": "datum.samples / datum.total", "as": "share"},
     {
-      "description": "Give each group the squares from its rounded start to its rounded end, so the 100 squares are shared out exactly.",
-      "calculate": "sequence(round(datum.start), round(datum.end))", "as": "square"
+      "description": "Share the 100 icons out from each group's rounded start to its rounded end.",
+      "calculate": "sequence(round(datum.start), round(datum.end))", "as": "slot"
     },
-    {"flatten": ["square"]},
-    {"calculate": "datum.square % 20", "as": "col"},
-    {"calculate": "floor(datum.square / 20)", "as": "row"}
+    {"flatten": ["slot"]},
+    {"calculate": "datum.slot % 20", "as": "col"},
+    {"calculate": "floor(datum.slot / 20)", "as": "row"},
+    {"lookup": "icon", "from": {"data": {"url": "data/icons.json"}, "key": "name", "fields": ["path"]}}
   ],
 
-  "width": {"step": 30},
-  "height": {"step": 30},
+  "width": {"step": 34},
+  "height": {"step": 34},
 
-  "mark": {"type": "square", "size": 640, "opacity": 1, "cornerRadius": 2},
+  "mark": {"type": "point", "filled": true, "size": 820, "opacity": 1, "strokeWidth": 0},
 
   "encoding": {
     "x": {"field": "col", "type": "ordinal", "axis": null},
     "y": {"field": "row", "type": "ordinal", "axis": null},
+    "shape": {"field": "path", "type": "nominal", "scale": null},
     "color": {
       "field": "group",
       "type": "nominal",
@@ -46,7 +42,7 @@
         "domain": ["Pet rabbits", "Wild rabbits", "Not recorded (probably wild)", "Hares"],
         "range": ["#4a64b0", "#c0662b", "#a3aea8", "#a3478f"]
       },
-      "legend": {"title": "Each square is 1% of samples", "orient": "right", "direction": "vertical", "labelFontSize": 13, "symbolSize": 160, "symbolType": "square"}
+      "legend": {"title": "Each animal is 1% of samples", "orient": "right", "direction": "vertical", "labelFontSize": 13, "symbolSize": 160, "symbolType": "circle"}
     },
     "tooltip": [
       {"field": "group", "title": "Animal"},

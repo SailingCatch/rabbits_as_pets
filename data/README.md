@@ -31,6 +31,7 @@ ready-to-use files are committed (about 360 KB in total).
 | `ramsey/rhdv2-site-abundance.csv` | typed in from the paper | 4 |
 | `anrd/rhd-sites.csv` | `scripts/prepare_anrd.py` | 4a |
 | `abs/population-by-state.csv` | `scripts/fetch_abs_population.py` | 5a |
+| `icons.json` | `scripts/make_icons.py` | 1, 1b, 5a, 9 (icon shapes) |
 
 All files join on one column, **`state`**: the short codes `NSW`, `VIC`,
 `QLD`, `SA`, `WA`, `TAS`, `NT`, `ACT`.

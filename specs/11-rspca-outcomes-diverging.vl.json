@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 11, diverging bar chart. For each state's RSPCA in 2023-24, the share of small pets ('other animals', which include rabbits) with a good outcome (a new home, or back to their owner) runs right from the centre line, and the share euthanased or that died runs left. Transferred animals and those still in care are in neither group, so bars don't reach 100%. States are sorted by the share found a new home. The NT (17 animals) is left out.",
+
+  "data": {
+    "url": "data/rspca/other-animals-by-state.csv",
+    "format": {"parse": {"received": "number", "reclaimed": "number", "returned": "number", "rehomed": "number", "in_care": "number", "transferred": "number", "euthanased": "number", "other": "number"}}
+  },
+
+  "transform": [
+    {"filter": "datum.financial_year === '2023-24' && datum.received >= 50"},
+    {"calculate": "datum.rehomed / datum.received", "as": "new_home"},
+    {"calculate": "(datum.reclaimed + (datum.returned || 0)) / datum.received", "as": "back_home"},
+    {"calculate": "datum.euthanased / datum.received", "as": "put_down"},
+    {"calculate": "datum.other / datum.received", "as": "died_other"},
+    {"calculate": "datum.state + '  (' + format(datum.received, ',') + ')'", "as": "label"},
+    {
+      "description": "One row per state per outcome, with where its bar starts and ends. Good outcomes stack right of zero, bad ones left.",
+      "fold": ["new_home", "back_home", "put_down", "died_other"], "as": ["outcome_key", "share"]
+    },
+    {"calculate": "{'new_home': 'New home', 'back_home': 'Back to owner', 'put_down': 'Euthanased', 'died_other': 'Died or other'}[datum.outcome_key]", "as": "outcome"},
+    {"calculate": "datum.outcome_key === 'new_home' ? 0 : datum.outcome_key === 'back_home' ? datum.new_home : datum.outcome_key === 'put_down' ? -datum.put_down : -datum.put_down - datum.died_other", "as": "x0"},
+    {"calculate": "datum.outcome_key === 'new_home' ? datum.new_home : datum.outcome_key === 'back_home' ? datum.new_home + datum.back_home : datum.outcome_key === 'put_down' ? 0 : -datum.put_down", "as": "x1"}
+  ],
+
+  "width": "container",
+  "height": {"step": 40},
+
+  "encoding": {
+    "y": {
+      "field": "label",
+      "type": "nominal",
+      "sort": {"field": "new_home", "op": "max", "order": "descending"},
+      "axis": {"title": null, "labelFontSize": 13, "labelColor": "#1e2b2a"}
+    }
+  },
+
+  "layer": [
+    {
+      "mark": {"type": "bar", "stroke": "#f3f5f1", "strokeWidth": 1.5, "height": {"band": 0.7}},
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "scale": {"domain": [-0.6, 1]},
+          "axis": {"title": null, "values": [-0.5, -0.25, 0, 0.25, 0.5, 0.75, 1], "labelExpr": "format(abs(datum.value), '.0%')", "orient": "top"}
+        },
+        "x2": {"field": "x1"},
+        "color": {
+          "field": "outcome",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Euthanased", "Died or other", "New home", "Back to owner"],
+            "range": ["#a3478f", "#6b8e23", "#4a64b0", "#00806a"]
+          },
+          "legend": {"title": null, "orient": "top", "direction": "horizontal"}
+        },
+        "tooltip": [
+          {"field": "state", "title": "RSPCA"},
+          {"field": "outcome", "title": "Outcome"},
+          {"field": "share", "title": "Share of small pets", "format": ".0%"},
+          {"field": "received", "title": "Small pets received", "format": ","}
+        ]
+      }
+    },
+    {
+      "description": "The zero line between bad and good outcomes.",
+      "mark": {"type": "rule", "color": "#1e2b2a", "strokeWidth": 1.5},
+      "encoding": {"x": {"datum": 0, "type": "quantitative"}}
+    },
+    {
+      "description": "Share found a new home, written at the end of the blue bar.",
+      "transform": [{"filter": "datum.outcome_key === 'new_home'"}],
+      "mark": {"type": "text", "align": "right", "dx": -6, "fontSize": 12, "fontWeight": 700, "color": "#ffffff"},
+      "encoding": {"x": {"field": "x1", "type": "quantitative"}, "text": {"field": "share", "format": ".0%"}}
+    },
+    {
+      "description": "Share euthanased, written at the left end of the purple bar where it fits.",
+      "transform": [{"filter": "datum.outcome_key === 'put_down' && datum.share >= 0.08"}],
+      "mark": {"type": "text", "align": "left", "dx": 6, "fontSize": 12, "fontWeight": 700, "color": "#ffffff"},
+      "encoding": {"x": {"field": "x0", "type": "quantitative"}, "text": {"field": "share", "format": ".0%"}}
+    }
+  ]
+}
