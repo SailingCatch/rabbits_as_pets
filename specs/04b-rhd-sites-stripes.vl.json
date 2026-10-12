@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Chart 4b, 'stripes' heatmap. One row per long-term monitoring site, one column per year. Each cell's colour is that year's rabbit count as a share of the site's own average before 1995, when calicivirus arrived: 100% means the usual number, 10% means a tenth of it. Empty cells are years the site wasn't counted. Rows are sorted by how far numbers fell in 1997-2001. Same 12 sites and data as chart 4a.",
+
+  "data": {
+    "url": "data/anrd/rhd-sites.csv",
+    "format": {"parse": {"year": "number", "rabbits_per_km": "number", "counts": "number"}}
+  },
+
+  "transform": [
+    {"calculate": "datum.site + ' (' + datum.state + ')'", "as": "row"},
+    {"calculate": "datum.year < 1995 ? datum.rabbits_per_km : null", "as": "before_value"},
+    {"calculate": "datum.year >= 1997 && datum.year <= 2001 ? datum.rabbits_per_km : null", "as": "after_value"},
+    {
+      "joinaggregate": [
+        {"op": "mean", "field": "before_value", "as": "usual"},
+        {"op": "mean", "field": "after_value", "as": "after_mean"}
+      ],
+      "groupby": ["row"]
+    },
+    {"calculate": "datum.rabbits_per_km / datum.usual", "as": "share"},
+    {"calculate": "datum.after_mean / datum.usual", "as": "after_share"}
+  ],
+
+  "width": "container",
+  "height": {"step": 28},
+
+  "layer": [
+    {
+      "mark": {"type": "rect", "stroke": "#f3f5f1", "strokeWidth": 1.5},
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "ordinal",
+          "scale": {"domain": [1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]},
+          "axis": {"title": null, "values": [1985, 1990, 1995, 2000, 2005, 2010, 2015], "labelAngle": 0, "orient": "top"}
+        },
+        "y": {
+          "field": "row",
+          "type": "nominal",
+          "sort": {"field": "after_share", "op": "max", "order": "ascending"},
+          "axis": {"title": null, "labelFontSize": 12, "labelColor": "#1e2b2a", "labelLimit": 0}
+        },
+        "color": {
+          "field": "share",
+          "type": "quantitative",
+          "scale": {"domain": [0, 1.5], "clamp": true, "range": ["#fbf3e4", "#e9c27f", "#d3913f", "#a9611f", "#6e3a12"]},
+          "legend": {
+            "title": "Rabbits counted, as a share of the site's usual level before 1995",
+            "orient": "bottom", "direction": "horizontal", "gradientLength": 280,
+            "values": [0, 0.5, 1, 1.5], "labelExpr": "datum.value >= 1.5 ? '150%+' : format(datum.value, '.0%')"
+          }
+        },
+        "tooltip": [
+          {"field": "row", "title": "Site"},
+          {"field": "year", "title": "Year"},
+          {"field": "rabbits_per_km", "title": "Rabbits per km", "format": ".1f"},
+          {"field": "share", "title": "Share of usual level", "format": ".0%"}
+        ]
+      }
+    },
+    {
+      "description": "Marker at 1995 and its label, along the top.",
+      "data": {"values": [{"year": 1995}]},
+      "layer": [
+        {
+          "mark": {"type": "rule", "color": "#1e2b2a", "strokeWidth": 2},
+          "encoding": {"x": {"field": "year", "type": "ordinal", "bandPosition": 0}}
+        }
+      ]
+    }
+  ]
+}

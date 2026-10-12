@@ -1,89 +1,213 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 3, hexagon density map with lines. Wild rabbit sightings 2021-2025 counted into equal-area hexagons about 80 km across (darker = more), with Western Australia's three rabbit-proof fences (built 1902-1907) drawn over the top. The hexagons are made by scripts/prepare_ala.py in this same projection, so each covers the same area.",
-
+  "description": "Chart 3, hexagon density map with lines. Every hexagon about 80 km across that covers Australian land, coloured by how many wild rabbit sightings were reported in it in 2021-2025, in five classes from none to 1,000 or more (each class is ten times the one before). Western Australia's three rabbit-proof fences (built 1902-1907) are drawn over the top. The hexagons are made by scripts/prepare_ala.py in this same projection, so each covers the same area.",
   "width": "container",
   "height": 600,
-
   "projection": {
     "type": "conicEqualArea",
-    "parallels": [-18, -36],
-    "rotate": [-132, 0],
-    "center": [0, -27]
+    "parallels": [
+      -18,
+      -36
+    ],
+    "rotate": [
+      -132,
+      0
+    ],
+    "center": [
+      0,
+      -27
+    ]
   },
-
   "layer": [
     {
       "description": "Base map: land in a quiet fill.",
       "data": {
         "url": "data/geo/australia-states.topojson",
-        "format": {"type": "topojson", "feature": "states"}
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
       },
-      "mark": {"type": "geoshape", "fill": "#e3e8e1", "stroke": null}
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e3e8e1",
+        "stroke": null
+      }
     },
     {
-      "description": "Hexagons, shaded on a log scale: each colour step is ten times more sightings.",
+      "description": "Hexagons in five classes; each class is ten times more sightings than the one before, and the palest means none.",
       "data": {
         "url": "data/ala/sightings-hexbins.geojson",
-        "format": {"type": "json", "property": "features"}
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
       },
-      "mark": {"type": "geoshape", "stroke": "#f3f5f1", "strokeWidth": 0.6},
+      "mark": {
+        "type": "geoshape",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.6
+      },
       "encoding": {
         "color": {
-          "field": "properties.count",
-          "type": "quantitative",
-          "scale": {"type": "log", "domain": [1, 10000], "range": ["#f6e7c8", "#e9c27f", "#d3913f", "#a9611f", "#6e3a12"]},
+          "field": "band",
+          "type": "ordinal",
+          "scale": {
+            "domain": [
+              "None",
+              "1–9",
+              "10–99",
+              "100–999",
+              "1,000+"
+            ],
+            "range": [
+              "#f6e7c8",
+              "#e9c27f",
+              "#d3913f",
+              "#a9611f",
+              "#6e3a12"
+            ]
+          },
           "legend": {
             "title": "Sightings in a hexagon, 2021–25",
-            "orient": "none", "legendX": 10, "legendY": 520,
-            "direction": "horizontal", "gradientLength": 200,
-            "values": [1, 10, 100, 1000, 10000], "format": ",d"
+            "orient": "none",
+            "legendX": 10,
+            "legendY": 470,
+            "direction": "vertical",
+            "symbolType": "M0,-1L0.866,-0.5L0.866,0.5L0,1L-0.866,0.5L-0.866,-0.5Z",
+            "symbolSize": 220,
+            "symbolStrokeWidth": 0,
+            "labelFontSize": 12
           }
         },
-        "tooltip": [{"field": "properties.count", "title": "Sightings 2021–25", "format": ","}]
-      }
+        "tooltip": [
+          {
+            "field": "count",
+            "title": "Sightings 2021–25",
+            "format": ","
+          }
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "datum.properties.count",
+          "as": "count"
+        },
+        {
+          "calculate": "datum.count === 0 ? 'None' : datum.count < 10 ? '1–9' : datum.count < 100 ? '10–99' : datum.count < 1000 ? '100–999' : '1,000+'",
+          "as": "band"
+        }
+      ]
     },
     {
       "description": "State borders drawn on top of the hexagons, thin and white.",
       "data": {
         "url": "data/geo/australia-states.topojson",
-        "format": {"type": "topojson", "feature": "states"}
+        "format": {
+          "type": "topojson",
+          "feature": "states"
+        }
       },
-      "mark": {"type": "geoshape", "filled": false, "stroke": "#ffffff", "strokeWidth": 1}
+      "mark": {
+        "type": "geoshape",
+        "filled": false,
+        "stroke": "#ffffff",
+        "strokeWidth": 1
+      }
     },
     {
       "description": "The three fences, in ink so they read as a man-made line across the land.",
       "data": {
         "url": "data/geo/rabbit-proof-fences.geojson",
-        "format": {"type": "json", "property": "features"}
+        "format": {
+          "type": "json",
+          "property": "features"
+        }
       },
-      "mark": {"type": "geoshape", "filled": false, "stroke": "#1e2b2a", "strokeWidth": 2.5, "strokeCap": "round"},
+      "mark": {
+        "type": "geoshape",
+        "filled": false,
+        "stroke": "#1e2b2a",
+        "strokeWidth": 2.5,
+        "strokeCap": "round"
+      },
       "encoding": {
-        "tooltip": [{"field": "properties.fence", "title": "Rabbit-proof fence"}]
+        "tooltip": [
+          {
+            "field": "properties.fence",
+            "title": "Rabbit-proof fence"
+          }
+        ]
       }
     },
     {
       "description": "Direct labels instead of a legend. Positions are placed by hand next to each line.",
       "data": {
         "values": [
-          {"lon": 120.4, "lat": -20.6, "text": "No. 1 fence"},
-          {"lon": 117.2, "lat": -30.2, "text": "No. 2"}
+          {
+            "lon": 120.4,
+            "lat": -20.6,
+            "text": "No. 1 fence"
+          },
+          {
+            "lon": 117.2,
+            "lat": -30.2,
+            "text": "No. 2"
+          }
         ]
       },
-      "mark": {"type": "text", "align": "left", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": 8},
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "fontSize": 13,
+        "fontWeight": 600,
+        "color": "#1e2b2a",
+        "dx": 8
+      },
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
-        "text": {"field": "text"}
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "text"
+        }
       }
     },
     {
-      "data": {"values": [{"lon": 114.6, "lat": -27.2, "text": "No. 3"}]},
-      "mark": {"type": "text", "align": "right", "fontSize": 13, "fontWeight": 600, "color": "#1e2b2a", "dx": -6},
+      "data": {
+        "values": [
+          {
+            "lon": 114.6,
+            "lat": -27.2,
+            "text": "No. 3"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "fontSize": 13,
+        "fontWeight": 600,
+        "color": "#1e2b2a",
+        "dx": -6
+      },
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
-        "text": {"field": "text"}
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "text"
+        }
       }
     }
   ]

@@ -62,9 +62,11 @@ const CHARTS = [
   },
   {
     id: "chart-04a",
-    spec: "specs/04a-rhd-sites-small-multiples.vl.json",
+    // Alternative: specs/04a-rhd-sites-small-multiples.vl.json (one small
+    // line chart per site; same data)
+    spec: "specs/04b-rhd-sites-stripes.vl.json",
     needs: ["data/anrd/rhd-sites.csv"],
-    idiom: "Small-multiple line charts",
+    idiom: "Heatmap ('stripes'): sites × years",
   },
 
   // 04 Still everywhere

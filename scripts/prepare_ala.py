@@ -10,7 +10,9 @@ unzipped). The charts only need counts, so this script writes:
                                          -> (spare: dot map version of chart 3)
 
     data/ala/sightings-hexbins.geojson   records per hexagon (~80 km across),
-                                         2021-2025; property: count
+                                         2021-2025, for every hexagon that
+                                         covers land (count 0 if none);
+                                         property: count
                                          -> chart 3 (hexagon map with fences)
 
     data/ala/sightings-grid-by-year.csv  records per 1° square (~100 km), per year
@@ -59,6 +61,7 @@ HEX_YEARS = range(2021, 2026)       # years counted into the hexagon map (chart 
 HEX_RADIUS_KM = 40                  # centre-to-corner size of each hexagon
 
 OUTPUT_DIR = Path("data/ala")
+STATES_FILE = Path("data/geo/australia-states.topojson")   # land, for empty hexagons
 
 STATE_ABBREVIATIONS = {
     "New South Wales": "NSW",
@@ -157,7 +160,73 @@ def hex_polygon(q, r):
     return ring
 
 
+# ---- Which hexagons are on land ---------------------------------------------
+# To draw empty hexagons too, every hexagon whose centre is on land is kept.
+# "On land" uses the state outlines made by scripts/build_boundaries.sh.
+
+def read_land(path):
+    """Every ring of every state outline, as lists of (lon, lat) points.
+    TopoJSON stores shared borders once ("arcs"), as whole-number steps
+    from the previous point; this undoes that."""
+    topo = json.loads(path.read_text())
+    (sx, sy), (tx, ty) = topo["transform"]["scale"], topo["transform"]["translate"]
+    arcs = []
+    for arc in topo["arcs"]:
+        x = y = 0
+        points = []
+        for dx, dy in arc:
+            x, y = x + dx, y + dy
+            points.append((x * sx + tx, y * sy + ty))
+        arcs.append(points)
+
+    def ring(indexes):
+        points = []
+        for i in indexes:
+            points += arcs[i] if i >= 0 else arcs[~i][::-1]   # ~i: arc i, reversed
+        return points
+
+    rings = []
+    for geometry in topo["objects"]["states"]["geometries"]:
+        polygons = geometry["arcs"] if geometry["type"] == "MultiPolygon" else [geometry["arcs"]]
+        for polygon in polygons:
+            rings += [ring(r) for r in polygon]
+    return rings
+
+
+def on_land(lon, lat, rings):
+    """Ray casting: a point is inside if a line from it crosses the
+    outlines an odd number of times (holes and islands work too)."""
+    inside = False
+    for points in rings:
+        for (x1, y1), (x2, y2) in zip(points, points[1:] + points[:1]):
+            if (y1 > lat) != (y2 > lat) and lon < x1 + (lat - y1) * (x2 - x1) / (y2 - y1):
+                inside = not inside
+    return inside
+
+
+def land_hexes():
+    """Every hexagon whose centre is on Australian land."""
+    rings = read_land(STATES_FILE)
+    lons = [x for r in rings for x, _ in r]
+    lats = [y for r in rings for _, y in r]
+    corners = [hex_cell(lon, lat) for lon in (min(lons), max(lons)) for lat in (min(lats), max(lats))]
+    qs = [q for q, _ in corners]
+    rs = [r for _, r in corners]
+    cells = set()
+    for r in range(min(rs) - 2, max(rs) + 3):
+        for q in range(min(qs) - 2 - (max(rs) - min(rs)), max(qs) + 3):
+            cx = HEX_R * math.sqrt(3) * (q + r / 2)
+            cy = HEX_R * 1.5 * r
+            lon, lat = unproject(cx, cy)
+            if min(lons) <= lon <= max(lons) and min(lats) <= lat <= max(lats) and on_land(lon, lat, rings):
+                cells.add((q, r))
+    return cells
+
+
 def write_hexbins(path, counts):
+    # Land hexagons with no sightings get a count of 0; hexagons with
+    # sightings are always kept, even where the centre falls just offshore.
+    counts = {cell: 0 for cell in land_hexes()} | dict(counts)
     features = [
         {"type": "Feature",
          "properties": {"count": n},
@@ -167,7 +236,9 @@ def write_hexbins(path, counts):
     path.write_text(json.dumps({"type": "FeatureCollection", "features": features},
                                separators=(",", ":")))
     size_kb = path.stat().st_size / 1024
-    print(f"  {path}  ({len(features):,} hexagons, {sum(counts.values()):,} records, {size_kb:,.0f} KB)")
+    empty = sum(1 for n in counts.values() if n == 0)
+    print(f"  {path}  ({len(features):,} hexagons, {empty:,} of them empty, "
+          f"{sum(counts.values()):,} records, {size_kb:,.0f} KB)")
 
 
 # ---- Writing ---------------------------------------------------------------
